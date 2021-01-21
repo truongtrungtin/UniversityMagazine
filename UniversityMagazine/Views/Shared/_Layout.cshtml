@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>University Magazine - @ViewBag.Title</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Content/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- toastr -->
+    <link rel="stylesheet" href="~/Content/plugins/toastr/toastr.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/Content/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    @RenderSection("css", required: false)
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Content/dist/css/adminlte.min.css">
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        @RenderPage("_Navigation.cshtml")
+        <div class="content-wrapper">
+            <!-- /.content-header -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+
+                        <div class="col-sm-6">
+
+                            <a href="@ViewBag.url">@ViewBag.Back</a>
+
+                            @if (TempData["AlertMessage"] != null)
+                            {
+                                <div id="toast-container" class="toast-top-right hide">
+                                    <div class="toast toast-@TempData["AlertType"]" aria-live="polite" style="">
+                                        <div class="toast-message">@TempData["AlertMessage"]</div>
+                                    </div>
+                                </div>
+                            }
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                @*<li class="breadcrumb-item">@Html.MvcSiteMap().SiteMapPath()</li>*@
+                            </ol>
+                        </div>
+                        <!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+
+                    @RenderBody()
+                    <aside class="control-sidebar control-sidebar-light">
+                        <!-- Control sidebar content goes here -->
+                        <div class="p-2 control-sidebar-content">
+                            @RenderSection("filter", required: false)
+                        </div>
+                    </aside>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="~/Content/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="~/Content/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="~/Content/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("js", required: false)
+    <!-- AdminLTE App -->
+    <script src="~/Content/dist/js/adminlte.min.js"></script>
+    <script src="~/Content/Site.js"></script>
+</body>
+</html>

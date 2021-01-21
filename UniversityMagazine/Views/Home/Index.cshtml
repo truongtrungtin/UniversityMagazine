@@ -1,0 +1,45 @@
+﻿@using UniversityMagazine.EF
+@using UniversityMagazine.Common
+@using UniversityMagazine.DAO
+@using System.Data.Entity;
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    UniversityMagazineDBContext db = new UniversityMagazineDBContext();
+    var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+}
+@section css{
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/Content/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Daterange picker -->
+}
+<!-- Content Wrapper. Contains page content -->
+<!-- /.row -->
+<!-- Main row -->
+
+<div class="row">
+    <section class="col-lg-6 connectedSortable">
+    </section>
+    <section class="col-lg-6 connectedSortable">
+    </section>
+</div>
+
+@section js{
+    <!-- Summernote -->
+    <script src="~/Content/plugins/summernote/summernote-bs4.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+
+        // Make the dashboard widgets sortable Using jquery UI
+        $('.connectedSortable').sortable({
+            placeholder: 'sort-highlight',
+            connectWith: '.connectedSortable',
+            handle: '.card-header, .nav-tabs',
+            forcePlaceholderSize: true,
+            zIndex: 999999
+        })
+        $('.connectedSortable .card-header').css('cursor', 'move')
+
+    </script>
+}

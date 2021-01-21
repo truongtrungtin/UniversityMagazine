@@ -1,0 +1,85 @@
+﻿body {
+    font-size: 12px
+}
+
+.form-control-sm {
+    font-size: 12px
+}
+
+.modal-dialog {
+    max-width: 950px;
+    margin: 1.75rem auto;
+}
+
+.form-group {
+    margin-bottom: 0.2rem;
+}
+
+.modal-header {
+    padding: 2px 10px 2px 10px
+}
+
+.modal-body {
+    padding: 2px 10px 2px 10px
+}
+
+.custom-select-sm {
+    font-size: 12px !important;
+}
+
+.btn-group-sm > .btn, .btn-sm {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+
+@media (min-width: 768px) {
+
+    body:not(.sidebar-mini-md) .content-wrapper, body:not(.sidebar-mini-md) .main-footer, body:not(.sidebar-mini-md) .main-header {
+        margin-left: 0px;
+    }
+}
+
+@media (min-width: 1009px) {
+
+    body:not(.sidebar-mini-md) .content-wrapper, body:not(.sidebar-mini-md) .main-footer, body:not(.sidebar-mini-md) .main-header {
+        margin-left: 200px;
+    }
+}
+
+.main-sidebar, .main-sidebar::before {
+    width: 200px;
+}
+
+.layout-fixed .brand-link {
+    width: 200px;
+}
+
+.brand-link {
+    padding: 10px;
+}
+
+table th input { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+    background-color: #d1cbc3;
+    border: none;
+    text-align: center;
+}
+
+    table th input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: black;
+        font-weight: bold;
+        font-size: 12px;
+        opacity: 1; /* Firefox */
+    }
+
+table th {
+    background-color: #d1cbc3;
+}
+
+.card-header {
+    padding: 10px;
+}
