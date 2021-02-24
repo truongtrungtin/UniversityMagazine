@@ -3,11 +3,11 @@
 @{
     UniversityMagazineDBContext db = new UniversityMagazineDBContext();
     var session = (UserLogin)Session[CommonConstants.USER_SESSION];
-    var Credential = (IEnumerable<Credential>)Session[CommonConstants.SESSION_CREDENTIALS];
+    var Credentials = (IEnumerable<Credentials>)Session[CommonConstants.SESSION_CREDENTIALS];
     var User = db.ACCOUNTs.Find(session.UserID);
 }
 <!-- Navbar -->
-<nav class="main-header navbar navbar-expand navbar-white navbar-light border-bottom-0 text-sm">
+<nav class="main-header navbar navbar-expand navbar-white navbar-light  text-sm">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -90,7 +90,7 @@
         </div>-->
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
                 <li class=" nav-item">
                     <a href="/" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -99,31 +99,141 @@
                         </p>
                     </a>
                 </li>
-                @if (Credential.Where(x => (x.ROLE_Name == "FrmCongViec" && x.CREDENTIAL_VIEW == true) || (x.ROLE_Name == "FrmGiaoDich" && x.CREDENTIAL_VIEW == true) || (x.ROLE_Name == "FrmKhachHang" && x.CREDENTIAL_VIEW == true) || (x.ROLE_Name == "FrmNhuCau" && x.CREDENTIAL_VIEW == true)).Count() > 0)
+                @if (Credentials.Where(x => (x.ROLE_Code == "ARTICLE" && x.CREDENTIAL_VIEW == true) || (x.ROLE_Code == "IMAGES" && x.CREDENTIAL_VIEW == true)).Count() > 0)
                 {
-                    <li class="nav-item" id="ACCOUNT">
+
+                    <li class="nav-item" id="MYUPLOAD">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-copy"></i>
                             <p>
-                                Account
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
+                                My Uploads <i class="fas fa-angle-left right"></i>
+                            </p>              
                         </a>
-
                         <ul class="nav nav-treeview">
-                            @if (Credential.Where(x => x.ROLE_Name == "FrmCongViec" && x.CREDENTIAL_VIEW == true).Count() > 0)
+                            @if (Credentials.Where(x => (x.ROLE_Code == "ARTICLE" && x.CREDENTIAL_VIEW == true)).Count() > 0 )
                             {
                                 <li class="nav-item">
-                                    <a href="~/Accounts" class="nav-link" id="Account">
+                                    <a href="~/MyUpload/Files" class="nav-link" id="FILES">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Accounts</p>
+                                        <p>Articles</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Credentials.Where(x => (x.ROLE_Code == "IMAGES" && x.CREDENTIAL_VIEW == true)).Count() > 0 )
+                            {
+                                <li class="nav-item">
+                                    <a href="~/MyUpload/Images" class="nav-link" id="IMAGES">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Images</p>
                                     </a>
                                 </li>
                             }
                         </ul>
                     </li>
                 }
+                @if (Credentials.Where(x => (x.ROLE_Code == "BROWSEARTICLES" && x.CREDENTIAL_VIEW == true) || (x.ROLE_Code == "BROWSEIMAGES" && x.CREDENTIAL_VIEW == true)).Count() > 0)
+                {
 
+                    <li class="nav-item" id="BROWSE">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-copy"></i>
+                            <p>
+                                Upload by students <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if (Credentials.Where(x => (x.ROLE_Code == "BROWSEARTICLES" && x.CREDENTIAL_VIEW == true)).Count() > 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="~/Upload/Articles/" class="nav-link" id="ARTICLES">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Articles</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Credentials.Where(x => (x.ROLE_Code == "BROWSEIMAGES" && x.CREDENTIAL_VIEW == true)).Count() > 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="~/Upload/Images/" class="nav-link" id="IMAGES">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Images</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (Credentials.Where(x => (x.ROLE_Code == "ACCOUNT" && x.CREDENTIAL_VIEW == true) || (x.ROLE_Code == "FACULTY" && x.CREDENTIAL_VIEW == true)).Count() > 0 || session.RoleGroup == "ADMIN")
+                {
+                    <li class="nav-item" id="MANAGEMENT">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-copy"></i>
+                            <p>
+                                Management
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if (Credentials.Where(x => (x.ROLE_Code == "FACULTY" && x.CREDENTIAL_VIEW == true)).Count() > 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="~/Management/Faculty/" class="nav-link" id="FACULTY">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Faculties</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Credentials.Where(x => (x.ROLE_Code == "ACCOUNT" && x.CREDENTIAL_VIEW == true)).Count() > 0 || session.RoleGroup == "ADMIN")
+                            {
+                                <li class="nav-item">
+                                    <a href="~/Management/Account/" class="nav-link" id="ACCOUNT">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            Accounts
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    </li>
+                }
+                @if (session.RoleGroup == "ADMIN")
+                {
+                    <li class="nav-item" id="CREDENTIAL">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-copy"></i>
+                            <p>
+                                Credentials
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if (session.RoleGroup == "ADMIN")
+                            {
+                                <li class="nav-item">
+                                    <a href="~/Credential/Role" class="nav-link" id="ROLE">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            Role
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+                            @if (session.RoleGroup == "ADMIN")
+                            {
+                                <li class="nav-item">
+                                    <a href="~/Credential/RoleGroup" class="nav-link" id="ROLEGROUP">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            Role Group
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

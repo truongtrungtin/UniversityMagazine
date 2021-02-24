@@ -1,0 +1,78 @@
+﻿@model IEnumerable<UniversityMagazine.EF.IMAGE>
+@using System.Globalization;
+@{
+    ViewBag.Title = "Images";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb{
+    <li class="breadcrumb-item"><a href="#">MyUploads</a></li>
+    <li class="breadcrumb-item active">@ViewBag.Title</li>
+}
+@section css{
+    <!-- Ekko Lightbox -->
+    <link rel="stylesheet" href="~/Content/plugins/ekko-lightbox/ekko-lightbox.css">
+}
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title text-bold">
+            Images
+            @Html.ActionLink("Upload", "UploadImage", null, new { @class = "btn btn-primary btn-sm mb-1" })
+        </h3>
+    </div>
+    <div class="card-body">
+        <ul class="mailbox-attachments d-flex align-items-stretch clearfix">
+            @foreach (var item in Model)
+            {
+                <li id="row_@item.IMAGE_Id">
+                    <span class="mailbox-attachment-icon"><img src="@item.IMAGE_FileUpload" style="width:auto!important;max-height:132px!important" class="img-fluid" alt="@item.IMAGE_FileName" /></span>
+                    <div class="mailbox-attachment-info">
+                        <a href="@item.IMAGE_FileUpload" data-toggle="lightbox" data-title="@item.IMAGE_Tittle" class="mailbox-attachment-name">@item.IMAGE_Tittle</a>
+                        <span class="mailbox-attachment-size clearfix mt-1">
+                            <span>@(item.Image_Size != 0 ? String.Format(CultureInfo.InvariantCulture, "{0:0,0}", (item.Image_Size)) : null) KB</span>
+                            <a href="#" class="btn btn-danger btn-sm float-right DeleteImage" title="Delete" id="@item.IMAGE_Id"><i class="fas fa-times"></i></a>
+                            <a href="@item.IMAGE_FileUpload" class="btn btn-primary btn-sm float-right" title="Download"><i class="fas fa-cloud-download-alt"></i></a>
+
+                        </span>
+                    </div>
+                </li>
+            }
+
+        </ul>
+    </div>
+</div>
+@section js{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <!-- Ekko Lightbox -->
+    <script src="~/Content/plugins/ekko-lightbox/ekko-lightbox.min.js"></script>
+    <script>
+        $(function () {
+            $('#MYUPLOAD').addClass("menu-open");
+            $('#IMAGES').addClass("active");
+
+            $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+                event.preventDefault();
+                $(this).ekkoLightbox({
+                    alwaysShowClose: true
+                });
+            });
+
+
+            $('.DeleteImage').click(function () {
+                var IMAGE_Id = $(this).attr('id');
+                $.ajax({
+                    url: "/MyUpload/DeleteImage?IMAGE_Id=" + IMAGE_Id,
+                    dataType: "json",
+                    type: "Post",
+                    success: function (res) {
+                        if (res.data) {
+                            $('#row_' + IMAGE_Id).remove();
+                            location.reload();
+                        }
+                    }
+                });
+            })
+
+        })
+
+    </script>
+}

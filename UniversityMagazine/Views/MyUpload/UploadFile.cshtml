@@ -1,0 +1,76 @@
+﻿@model UniversityMagazine.EF.ARTICLE
+@{
+    ViewBag.Title = "Upload File";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css{
+    <!-- summernote -->
+    <link rel="stylesheet" href="~/Content/plugins/summernote/summernote-bs4.min.css">
+}
+@section breadcrumb{
+    <li class="breadcrumb-item"><a href="#">MyUploads</a></li>
+    <li class="breadcrumb-item">
+        @Html.ActionLink("Files", "Files")
+    </li>
+    <li class="breadcrumb-item active">@ViewBag.Title</li>
+}
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title text-bold">
+            Upload File
+        </h3>
+    </div>
+    @using (Html.BeginForm("UploadFile", "MyUpload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="card-body">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="text-center">Terms and Conditions</h3>
+                </div>
+                <div class="card-footer">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" id="Confirm">
+                        <label for="Confirm" class="custom-control-label">I have read and accept the terms and conditions</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input class="form-control form-control-sm" name="ARTICLE_Tittle" maxlength="10" placeholder="Tittle" required>
+            </div>
+            <div class="form-group">
+                <div class="custom-file">
+                    <input type="file" name="file" class="custom-file-input" required id="file">
+                    <label class="custom-file-label" for="file">Choose file</label>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="float-right">
+                <button type="submit" class="btn btn-primary" disabled id="Upload"><i class="fa fa-upload"></i> Upload</button>
+            </div>
+            <button type="reset" class="btn btn-default"><i class="fas fa-times"></i>Discard</button>
+        </div>
+    }
+</div>
+
+@section js{
+    <!-- bs-custom-file-input -->
+    <script src="~/Content/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <!-- Summernote -->
+    <script src="~/Content/plugins/summernote/summernote-bs4.min.js"></script>
+    <script src="~/Content/plugins/dropzone/dropzone.js"></script>
+    <script>
+        $(function () {
+            //Add text editor
+            $('#compose-textarea').summernote();
+            bsCustomFileInput.init();
+            $("#Confirm").click(function () {
+                if ($("#Confirm:checkbox:checked").length > 0) {
+                    $("#Upload").removeAttr("disabled");
+                } else {
+                    $("#Upload").attr("disabled", true);
+                }
+            });
+        });
+    </script>
+}

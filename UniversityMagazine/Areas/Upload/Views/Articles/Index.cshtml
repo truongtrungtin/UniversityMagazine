@@ -1,0 +1,47 @@
+﻿@model IEnumerable<UniversityMagazine.EF.ARTICLE>
+@using System.Globalization;
+@{
+    ViewBag.Title = "Articles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb{
+    <li class="breadcrumb-item"><a href="#">Upload by students</a></li>
+    <li class="breadcrumb-item active">@ViewBag.Title</li>
+}
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title text-bold">
+            Articles
+        </h3>
+
+    </div>
+    <div class="card-body">
+        <ul class="mailbox-attachments d-flex align-items-stretch clearfix">
+            @foreach (var item in Model)
+            {
+                <li id="row_@item.ARTICLE_Id">
+                    <span class="mailbox-attachment-icon"><i class="far fa-file-pdf"></i></span>
+
+                    <div class="mailbox-attachment-info">
+                        <a href="~/Upload/Articles/Article/@item.ARTICLE_FileName/" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> @item.ARTICLE_Tittle</a> <span style="color:@(item.ARTICLE_Status ? "#cfefcf" : "red")">(@(item.ARTICLE_Status ? "approved" : "Unapproved"))</span>
+                        <br /><a href="#" class="mailbox-attachment-name"><i class="fa fa-user-circle"></i> @item.ACCOUNT.ACCOUNT_Name</a>
+                        <span class="mailbox-attachment-size clearfix mt-1">
+                            <span>@(item.ARTICLE_Size != 0 ? String.Format(CultureInfo.InvariantCulture, "{0:0,0}", (item.ARTICLE_Size)) : null) KB</span>
+                        </span>
+                    </div>
+                </li>
+            }
+
+        </ul>
+    </div>
+</div>
+@section js{
+    <script>
+        $(function () {
+            $('#BROWSE').addClass("menu-open");
+            $('#BROWSE #ARTICLES').addClass("active");
+        });
+
+    </script>
+}

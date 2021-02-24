@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using UniversityMagazine.Common;
 using UniversityMagazine.DAO;
 using UniversityMagazine.Models;
@@ -51,6 +47,7 @@ namespace UniversityMagazine.Controllers
                     var user = dao.GetByUsername(loginModel.UserName);
                     var userSession = new UserLogin();
                     userSession.UserID = user.ACCOUNT_Id;
+                    userSession.RoleGroup = user.ROLEGROUP.ROLEGROUP_Code;
                     // Lấy danh sách quyền của người đăng nhập
                     var listCredentials = dao.GetListCredential(user.ACCOUNT_Id);
                     //Tạo session cho danh sách quyền
@@ -61,19 +58,19 @@ namespace UniversityMagazine.Controllers
                 }
                 else if (result == 0)
                 {
-                    SetAlert("Tài khoản không tồn tại!", "warning");
+                    SetAlert("Account does not exist!", "warning");
                 }
                 else if (result == -1)
                 {
-                    SetAlert("Tài khoản đang bị khoá!", "warning");
+                    SetAlert("The account is locked!", "warning");
                 }
                 else if (result == -2)
                 {
-                    SetAlert("Mật khẩu không đúng!", "warning");
+                    SetAlert("Incorrect password!", "warning");
                 }
                 else
                 {
-                    SetAlert("Thông tin đăng nhập không đúng!", "warning");
+                    SetAlert("Login information is incorrect!", "warning");
                 }
             }
             return RedirectToAction("/");

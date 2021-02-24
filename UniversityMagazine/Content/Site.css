@@ -1,9 +1,9 @@
 ﻿body {
-    font-size: 12px
+    font-size: 14px
 }
 
 .form-control-sm {
-    font-size: 12px
+    font-size: 14px
 }
 
 .modal-dialog {
@@ -28,34 +28,14 @@
 }
 
 .btn-group-sm > .btn, .btn-sm {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
 }
 
 
-
-@media (min-width: 768px) {
-
-    body:not(.sidebar-mini-md) .content-wrapper, body:not(.sidebar-mini-md) .main-footer, body:not(.sidebar-mini-md) .main-header {
-        margin-left: 0px;
-    }
+.nav-sidebar .nav-link > .right, .nav-sidebar .nav-link > p > .right {
+    right: 0.5rem;
 }
-
-@media (min-width: 1009px) {
-
-    body:not(.sidebar-mini-md) .content-wrapper, body:not(.sidebar-mini-md) .main-footer, body:not(.sidebar-mini-md) .main-header {
-        margin-left: 200px;
-    }
-}
-
-.main-sidebar, .main-sidebar::before {
-    width: 200px;
-}
-
-.layout-fixed .brand-link {
-    width: 200px;
-}
-
 .brand-link {
     padding: 10px;
 }
@@ -82,4 +62,17 @@ table th {
 
 .card-header {
     padding: 10px;
+}
+
+.direct-chat-messages {
+    min-height:0px!important;
+    height:unset;
+}
+
+.sidebar-dark-primary {
+    background-color: #284255!important;
+}
+
+.content-wrapper {
+    background-color: #f5f7f9;
 }

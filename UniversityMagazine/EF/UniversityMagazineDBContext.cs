@@ -1,87 +1,104 @@
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Linq;
 
 namespace UniversityMagazine.EF
 {
     public partial class UniversityMagazineDBContext : DbContext
     {
         public UniversityMagazineDBContext()
-            : base("name=UniversityMagazineContext")
+            : base("name=UniversityMagazineDBContext")
         {
         }
 
         public virtual DbSet<ACCOUNT> ACCOUNTs { get; set; }
         public virtual DbSet<ARTICLE> ARTICLEs { get; set; }
-        public virtual DbSet<ARTICLEHASHTAG> ARTICLEHASHTAGs { get; set; }
-        public virtual DbSet<ARTICLEIMAGE> ARTICLEIMAGEs { get; set; }
+        public virtual DbSet<COMMENTARTICLE> COMMENTARTICLEs { get; set; }
+        public virtual DbSet<COMMENTIMAGE> COMMENTIMAGEs { get; set; }
         public virtual DbSet<CREDENTIAL> CREDENTIALs { get; set; }
         public virtual DbSet<EDITINGHISTORY> EDITINGHISTORies { get; set; }
         public virtual DbSet<FACULTY> FACULTies { get; set; }
-        public virtual DbSet<HASHTAG> HASHTAGs { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<IMAGE> IMAGEs { get; set; }
+        public virtual DbSet<ROLE> ROLEs { get; set; }
         public virtual DbSet<ROLEGROUP> ROLEGROUPs { get; set; }
         public virtual DbSet<SLIDE> SLIDEs { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<TERMCONDITION> TERMCONDITIONs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ACCOUNT>()
-                .Property(e => e.ACCOUNT_Code)
-                .IsUnicode(false);
 
             modelBuilder.Entity<ACCOUNT>()
                 .Property(e => e.ACCOUNT_Telephone)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<ARTICLE>()
-                .Property(e => e.ARTICLES_Code)
+            modelBuilder.Entity<ACCOUNT>()
+                .Property(e => e.ACCOUNT_Username)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<ARTICLE>()
-                .Property(e => e.ARTICLES_FileUpload)
+            modelBuilder.Entity<ACCOUNT>()
+                .Property(e => e.ACCOUNT_Password)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<ARTICLE>()
-                .HasMany(e => e.ARTICLEHASHTAGs)
-                .WithOptional(e => e.ARTICLE)
+            modelBuilder.Entity<ACCOUNT>()
+                .Property(e => e.ACCOUNT_Key)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACCOUNT>()
+                .Property(e => e.ACCOUNT_Avatar)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ACCOUNT>()
+                .HasMany(e => e.COMMENTARTICLEs)
+                .WithOptional(e => e.ACCOUNT)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<ACCOUNT>()
+                .HasMany(e => e.COMMENTIMAGEs)
+                .WithOptional(e => e.ACCOUNT)
                 .WillCascadeOnDelete();
 
             modelBuilder.Entity<ARTICLE>()
-                .HasMany(e => e.ARTICLEIMAGEs)
+                .Property(e => e.ARTICLE_FileName)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ARTICLE>()
+                .Property(e => e.ARTICLE_Type)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ARTICLE>()
+                .Property(e => e.ARTICLE_FileUpload)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<ARTICLE>()
+                .HasMany(e => e.COMMENTARTICLEs)
                 .WithOptional(e => e.ARTICLE)
                 .WillCascadeOnDelete();
 
             modelBuilder.Entity<ARTICLE>()
                 .HasMany(e => e.EDITINGHISTORies)
                 .WithOptional(e => e.ARTICLE)
-                .HasForeignKey(e => e.ARTICLE_Id)
                 .WillCascadeOnDelete();
 
-            modelBuilder.Entity<ARTICLEIMAGE>()
-                .Property(e => e.ARTICLEIMAGE_Url)
+            modelBuilder.Entity<IMAGE>()
+                .Property(e => e.IMAGE_FileName)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<FACULTY>()
-                .Property(e => e.FACULTY_Code)
+            modelBuilder.Entity<IMAGE>()
+                .Property(e => e.IMAGE_Type)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<HASHTAG>()
-                .Property(e => e.HASHTAG_Code)
+            modelBuilder.Entity<IMAGE>()
+                .Property(e => e.IMAGE_FileUpload)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<HASHTAG>()
-                .HasMany(e => e.ARTICLEHASHTAGs)
-                .WithOptional(e => e.HASHTAG)
+            modelBuilder.Entity<IMAGE>()
+                .HasMany(e => e.COMMENTIMAGEs)
+                .WithOptional(e => e.IMAGE)
                 .WillCascadeOnDelete();
 
-            modelBuilder.Entity<Role>()
+            modelBuilder.Entity<ROLE>()
                 .Property(e => e.ROLE_Code)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Role>()
+            modelBuilder.Entity<ROLE>()
                 .HasMany(e => e.CREDENTIALs)
                 .WithRequired(e => e.Role)
                 .WillCascadeOnDelete(false);

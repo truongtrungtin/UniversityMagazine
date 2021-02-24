@@ -1,0 +1,16 @@
+﻿
+@model UniversityMagazine.EF.COMMENTARTICLE
+@using UniversityMagazine.EF
+@{
+    UniversityMagazineDBContext db = new UniversityMagazineDBContext();
+}
+
+@Html.HiddenFor(x=>x.COMMENT_Id)
+@Html.HiddenFor(x=>x.ARTICLE_Id)
+<div class="input-group">
+    <input type="text" name="COMMENT_Content" value="@Model.COMMENT_Content" class="form-control" required>
+</div>
+<div style="text-align:right">
+    <button type="submit" class="btn btn-primary btn-sm" id="edit">Save</button>
+    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+</div>

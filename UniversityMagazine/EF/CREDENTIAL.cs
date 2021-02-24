@@ -1,10 +1,8 @@
 namespace UniversityMagazine.EF
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("CREDENTIAL")]
     public partial class CREDENTIAL
@@ -24,7 +22,7 @@ namespace UniversityMagazine.EF
 
         public Guid ROLE_Id { get; set; }
 
-        public virtual Role Role { get; set; }
+        public virtual ROLE Role { get; set; }
 
         public virtual ROLEGROUP ROLEGROUP { get; set; }
     }

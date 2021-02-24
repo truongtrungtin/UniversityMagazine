@@ -1,0 +1,149 @@
+﻿@model UniversityMagazine.EF.ACCOUNT
+@using UniversityMagazine.EF
+@using UniversityMagazine.Common
+@{
+    UniversityMagazineDBContext db = new UniversityMagazineDBContext();
+    var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+}
+@Html.HiddenFor(x=>x.ACCOUNT_Id)
+<div class="row">
+    <div class="col-lg-12">
+        <div class="form-group row">
+            <label class="col-form-label col-lg-2">Full Name</label>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    <input type="text" name="ACCOUNT_Name" value="@Model.ACCOUNT_Name" class="form-control form-control-sm" required />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group row">
+            <label class="col-form-label col-lg-2">BirthDay</label>
+            <div class="col-lg-10">
+                <div class="input-group date" id="ACCOUNT_BirthDay" data-target-input="nearest">
+                    <input type="text" name="ACCOUNT_BirthDay" data-target="#ACCOUNT_BirthDay" value="@Model.ACCOUNT_BirthDay.Value.ToString("dd/MM/yyyy")" required class="form-control form-control-sm" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                    <div class="input-group-append" data-target="#ACCOUNT_BirthDay" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group row">
+            <label class="col-form-label col-lg-2">Email</label>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    <input type="text" name="ACCOUNT_Email" value="@Model.ACCOUNT_Email" class="form-control form-control-sm" required />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group row">
+            <label class="col-form-label col-lg-2">Telephone</label>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    <input type="text" name="ACCOUNT_Telephone" value="@Model.ACCOUNT_Telephone" class="form-control form-control-sm" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group row">
+            <label class="col-form-label col-lg-2">Address</label>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    <input type="text" name="ACCOUNT_Address" value="@Model.ACCOUNT_Address" class="form-control form-control-sm" />
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (session.RoleGroup != "ADMIN")
+    {
+        <div class="col-lg-12">
+            <div class="form-group row">
+                <label class="col-form-label col-lg-2">FACULTY</label>
+                <div class="col-lg-10">
+                    <div class="input-group">
+                        <select name="FACULTY_Id" class="form-control form-control-sm select2" data-placeholder="Choose" required>
+                            @if (Model.FACULTY_Id != null)
+                            {
+                                <option value="@Model.FACULTY_Id">@Model.FACULTY.FACULTY_Name - @Model.FACULTY.FACULTY_Descriptions</option>
+                            }
+                            else
+                            {
+                                <option value=""></option>
+                            }
+                            @foreach (var item in db.FACULTies)
+                            {
+                                <option value="@item.FACULTY_Id">@item.FACULTY_Name - @item.FACULTY_Descriptions</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="col-lg-12">
+        <div class="form-group row">
+            <label class="col-form-label col-lg-2">Status</label>
+            <div class="col-lg-10">
+                <div class="input-group">
+                    <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                        <input type="checkbox" name="ACCOUNT_Status" onclick="return true;" class="custom-control-input" id="ACCOUNT_Status" @(Model.ACCOUNT_Status == true ? "Checked" : null) />
+                        <label class="custom-control-label" for="ACCOUNT_Status"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="text-align:left">
+    <span id="ERROR"></span>
+</div>
+<div style="text-align:right">
+    <button type="submit" class="btn btn-primary btn-sm start">Save</button>
+    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+</div>
+
+<script>
+    $('.select2').select2({ theme: 'bootstrap4', allowClear: true });
+    $(document).ready(function () {
+        $("#ACCOUNT_Email").keyup(function () {
+            var ACCOUNT_Email = $(this).val().trim();
+            $.ajax({
+                url: '/Credential/Account/CheckEmailExist',
+                type: 'post',
+                data: { ACCOUNT_Email: ACCOUNT_Email },
+                success: function (response) {
+                    if (!response) {
+                        $('#add').attr("disabled", true);
+                        $('#ACCOUNT_Email').attr("style", "border-color:red");
+                        $('#ERROR').text("Email already exists! Please choose another name!").attr("style", "color:red");
+
+                    } else {
+                        $('#add').removeAttr("disabled");
+                        $('#ACCOUNT_Email').removeAttr("style");
+                        $('#ERROR').text("");
+                    }
+
+                }
+            });
+
+        });
+
+    });
+    $(function () {
+        bsCustomFileInput.init();
+    });
+    $("input[name='ACCOUNT_Status']").each(function () {
+        $(this).val('state' ? 'True' : 'False');
+    });
+    $('[data-mask]').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    $('#ACCOUNT_BirthDay').datetimepicker({
+        format: 'DD/MM/YYYY',
+    });
+</script>

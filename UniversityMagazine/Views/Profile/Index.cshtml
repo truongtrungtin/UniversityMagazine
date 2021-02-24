@@ -1,0 +1,316 @@
+﻿@model UniversityMagazine.EF.ACCOUNT
+@using UniversityMagazine.EF
+@using UniversityMagazine.Common
+@{
+    UniversityMagazineDBContext db = new UniversityMagazineDBContext();
+    var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+}
+
+@if (session.UserID == Model.ACCOUNT_Id && session.RoleGroup != "ADMIN")
+{
+
+    {
+        ViewBag.Title = Model.ACCOUNT_Username;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+
+    }
+    using (Html.BeginForm("Edit", "Profile", FormMethod.Post))
+    {
+        <div class="modal fade" id="MyModalEdit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="ModalTitle" class="card-title mb-0">Edit Information</h5>
+                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
+                    </div>
+                    <div class="modal-body" id="myModalBodyDivEdit">
+                        @Html.HiddenFor(x => x.ACCOUNT_Username)
+                        <div class="card card-secondary">
+                            <div class="card-header pt-2 pr-2 pl-2 pb-2">
+                                <h3 class="card-title">Information</h3>
+                            </div>
+                            <div class="card-body pb-0 pt-2 pr-2 pl-2">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2">Full Name</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="text" name="ACCOUNT_Name" value="@Model.ACCOUNT_Name" class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2">BirthDay</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="text" name="ACCOUNT_BirthDay" value="@(Model.ACCOUNT_BirthDay != null ? Model.ACCOUNT_BirthDay.Value.ToString("dd/MM/yyyy"): null)" class="form-control form-control-sm" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2">Telephone</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="text" name="ACCOUNT_Telephone" value="@Model.ACCOUNT_Telephone" class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2">Email</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="email" name="ACCOUNT_Email" value="@Model.ACCOUNT_Email" class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-1">Địa chỉ</label>
+                                            <div class="col-lg-11">
+                                                <div class="input-group">
+                                                    <input type="text" name="ACCOUNT_Address" value="@Model.ACCOUNT_Address" class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <div style="text-align:right">
+                            <button type="submit" class="btn btn-primary btn-sm start">Save</button>
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    using (Html.BeginForm("Avatar", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="modal fade" id="MyModalAvatar">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width:60%">
+                    <div class="modal-header">
+                        <h5 id="ModalTitle" class="card-title mb-0">Change avatar</h5>
+                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
+                    </div>
+                    <div class="modal-body" id="myModalBodyDivAvatar">
+
+                        @Html.HiddenFor(x => x.ACCOUNT_Username)
+                        <div class="input-group m-1">
+                            <div class="custom-file">
+                                <input type="file" name="ACCOUNT_Avatar" class="custom-file-input" id="ACCOUNT_Avatar">
+                                <label class="custom-file-label" for="ACCOUNT_Avatar">Choose Image</label>
+                            </div>
+                        </div>
+                        <div style="text-align:right">
+                            <button type="submit" class="btn btn-primary btn-sm start">Save</button>
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    }
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Profile Image -->
+            <div class="card card-primary card-outline">
+                <div class="card-body box-profile">
+                    <div class="text-center">
+                        <img class="profile-user-img img-fluid img-circle"
+                             src="@Model.ACCOUNT_Avatar"
+                             alt="User profile picture">
+                    </div>
+                    <div class="text-center">
+                        <a href="#" data-toggle="modal" data-target="#MyModalAvatar"><i class="nav-icon fas fa-user-edit"></i>Thay ảnh đại diện</a>
+                    </div>
+                    <h3 class="profile-username text-center">@Model.ACCOUNT_Name</h3>
+                    <p class="text-muted text-center">@Model.FACULTY.FACULTY_Name</p>
+                    <p class="text-muted text-center">@Model.ROLEGROUP.ROLEGROUP_Name</p>
+
+                    <ul class="list-group list-group-unbordered mb-3">
+                        <li class="list-group-item">
+                            <b>Articles</b> <a class="float-right">@Model.ARTICLEs.Count()</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Approved Articles</b> <a class="float-right">@Model.ARTICLEs.Where(x => x.ARTICLE_Status == true).Count()</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Images</b> <a class="float-right">@Model.IMAGEs.Count()</a>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Approved Images</b> <a class="float-right">@Model.IMAGEs.Where(x => x.IMAGE_Status == true).Count()</a>
+                        </li>
+                    </ul>
+
+                    @*<a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>*@
+                </div>
+                <!-- /.card-body -->
+            </div>       
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills">
+                        @*<li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab">Activity</a></li>*@
+                        <li class="nav-item"><a class="nav-link" href="#myupload" data-toggle="tab">MyUpload</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#info" data-toggle="tab">Information</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#pass" data-toggle="tab">Password</a></li>
+                    </ul>
+                </div><!-- /.card-header -->
+                <div class="card-body p-1">
+                    <div class="tab-content">
+                        <div class="tab-pane" id="myupload">
+                            @Html.Partial("MyUpload")
+                        </div>
+                        <div class="active tab-pane" id="info">
+                            <div class="card-body pb-0 pt-2 pr-2 pl-2">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2">Full Name</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="text" value="@Model.ACCOUNT_Name" class="form-control form-control-sm" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2">BirthDay</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="text" value="@(Model.ACCOUNT_BirthDay != null ? Model.ACCOUNT_BirthDay.Value.ToString("dd/MM/yyyy") : null)" class="form-control form-control-sm" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2">Telephone</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="text" value="@Model.ACCOUNT_Telephone" class="form-control form-control-sm" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-2">Email</label>
+                                            <div class="col-lg-10">
+                                                <div class="input-group">
+                                                    <input type="email" value="@Model.ACCOUNT_Email" class="form-control form-control-sm" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-lg-1">Địa chỉ</label>
+                                            <div class="col-lg-11">
+                                                <div class="input-group">
+                                                    <input type="text" value="@Model.ACCOUNT_Address" class="form-control form-control-sm" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align:right">
+                                <a href="#" class="btn btn-primary btn-sm mb-1" data-toggle="modal" data-target="#MyModalEdit">Chỉnh sửa</a>
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="pass">
+                            @using (Html.BeginForm("ChangePassword", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                @Html.HiddenFor(x => x.ACCOUNT_Username)
+                                <div class="row-cols-4">
+                                    <div class="input-group mb-2">
+                                        <input type="password" name="OldPassword" required class="form-control form-control-sm" placeholder="Old password">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <span class="fas fa-lock"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <input type="password" name="NewPassword" id="NewPassword" required class="form-control form-control-sm" placeholder="New password">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <span class="fas fa-lock"></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <span id="message"></span>
+                                    <div class="input-group mb-2">
+                                        <input type="password" name="ConfirmNewPassword" id="ConfirmNewPassword" required class="form-control form-control-sm" placeholder="Confirm password">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <span class="fas fa-lock"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button type="submit" id="submit" disabled class="btn btn-success">Change Password</button>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- /.tab-pane -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div><!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+    <!-- bs-custom-file-input -->
+    @section js{
+        <script src="~/Content/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+        <!-- InputMask -->
+        <script src="/Content/plugins/inputmask/jquery.inputmask.min.js"></script>
+        <script>
+            $(function () {
+                bsCustomFileInput.init();
+            });
+
+            $('#NewPassword, #ConfirmNewPassword').on('keyup', function () {
+                if ($('#NewPassword').val() != '') {
+                    if ($('#NewPassword').val() == $('#ConfirmNewPassword').val()) {
+                        $('#ConfirmNewPassword').css('border', '2px solid green');
+                        $('#submit').removeAttr('disabled');
+                    } else
+                        $('#ConfirmNewPassword').css('border', '2px solid red');
+                }
+            });
+
+            $('[data-mask]').inputmask('dd/mm/yyyy');
+
+        </script>
+    }
+}

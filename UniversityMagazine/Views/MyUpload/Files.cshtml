@@ -1,0 +1,72 @@
+﻿@model IEnumerable<UniversityMagazine.EF.ARTICLE>
+@using System.Globalization;
+@{
+    ViewBag.Title = "Files";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section breadcrumb{
+    <li class="breadcrumb-item"><a href="#">MyUploads</a></li>
+    <li class="breadcrumb-item active">@ViewBag.Title</li>
+}
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title text-bold">
+            Articles
+            @Html.ActionLink("Upload", "UploadFile", null, new { @class = "btn btn-primary btn-sm mb-1" })
+        </h3>
+
+    </div>
+    <div class="card-body">
+        <ul class="mailbox-attachments d-flex align-items-stretch clearfix">
+            @foreach (var item in Model)
+            {
+                <li id="row_@item.ARTICLE_Id">
+                    <span class="mailbox-attachment-icon"><i class="far fa-file-pdf"></i></span>
+
+                    <div class="mailbox-attachment-info">
+                        <a href="/MyUpload/File/@item.ARTICLE_FileName/" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> @item.ARTICLE_Tittle</a> <span style="color:@(item.ARTICLE_Status ? "#cfefcf" : "red")">(@(item.ARTICLE_Status ? "approved" : "Unapproved"))</span>
+                        <span class="mailbox-attachment-size clearfix mt-1">
+                            <span>@(item.ARTICLE_Size != 0 ? String.Format(CultureInfo.InvariantCulture, "{0:0,0}", (item.ARTICLE_Size)) : null) KB</span>
+                             @if ((DateTime.Now - item.ARTICLE_UploadTime).Value.TotalDays < 1)
+                             {
+                                <a href="#" class="btn btn-danger btn-sm float-right DeleteFile" title="Delete" id="@item.ARTICLE_Id"><i class="fas fa-times"></i></a>
+                             }
+                            <a href="@item.ARTICLE_FileUpload" class="btn btn-default btn-sm float-right"><i class="fas fa-cloud-download-alt"></i></a>
+                        </span>
+                    </div>
+                </li>
+            }
+
+        </ul>
+    </div>
+</div>
+@section js{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        $(function () {
+            $('#MYUPLOAD').addClass("menu-open");
+            $('#FILES').addClass("active");
+
+            $('.DeleteFile').click(function () {
+                if (!confirm("Are you sure you want to delete?")) {
+                    return false;
+                } else {
+                    var ARTICLE_Id = $(this).attr('id');
+                    $.ajax({
+                        url: "/MyUpload/DeleteFileJson?ARTICLE_Id=" + ARTICLE_Id,
+                        dataType: "json",
+                        type: "Post",
+                        success: function (res) {
+                            if (res.data) {
+                                $('#row_' + ARTICLE_Id).remove();
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+            })
+        });
+
+    </script>
+}

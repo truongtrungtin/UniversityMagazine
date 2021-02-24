@@ -1,10 +1,8 @@
 namespace UniversityMagazine.EF
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("EDITINGHISTORY")]
     public partial class EDITINGHISTORY
@@ -19,6 +17,8 @@ namespace UniversityMagazine.EF
         public Guid? ACCOUNT_Id { get; set; }
 
         public Guid? ARTICLE_Id { get; set; }
+
+        public virtual ACCOUNT ACCOUNT { get; set; }
 
         public virtual ARTICLE ARTICLE { get; set; }
     }

@@ -45,7 +45,7 @@
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                @*<li class="breadcrumb-item">@Html.MvcSiteMap().SiteMapPath()</li>*@
+                                @RenderSection("breadcrumb", required: false)
                             </ol>
                         </div>
                         <!-- /.col -->

@@ -4,7 +4,6 @@ namespace UniversityMagazine.EF
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("ARTICLE")]
     public partial class ARTICLE
@@ -12,41 +11,57 @@ namespace UniversityMagazine.EF
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ARTICLE()
         {
-            ARTICLEHASHTAGs = new HashSet<ARTICLEHASHTAG>();
-            ARTICLEIMAGEs = new HashSet<ARTICLEIMAGE>();
+            COMMENTARTICLEs = new HashSet<COMMENTARTICLE>();
             EDITINGHISTORies = new HashSet<EDITINGHISTORY>();
         }
 
         [Key]
-        public Guid ARTICLES_Id { get; set; }
+        public Guid ARTICLE_Id { get; set; }
+
+        [StringLength(50)]
+        public string ARTICLE_FileName { get; set; }
+
+        [StringLength(50)]
+        public string ARTICLE_Type { get; set; }
+
+        public long? ARTICLE_Size { get; set; }
 
         [StringLength(500)]
-        public string ARTICLES_Code { get; set; }
+        public string ARTICLE_FileUpload { get; set; }
+
+        public DateTime? ARTICLE_EditTime { get; set; }
+
+        public DateTime? ARTICLE_UploadTime { get; set; }
 
         [StringLength(500)]
-        public string ARTICLES_Content { get; set; }
+        public string ARTICLE_Tittle { get; set; }
 
-        [StringLength(100)]
-        public string ARTICLES_Tittle { get; set; }
-
-        [StringLength(500)]
-        public string ARTICLES_FileUpload { get; set; }
-
-        public DateTime? ARTICLES_UploadTime { get; set; }
-
-        public bool? ARTICLES_Status { get; set; }
+        public bool ARTICLE_Status { get; set; }
 
         public Guid? FACULTY_Id { get; set; }
+
+        public Guid? ACCOUNT_Id { get; set; }
+
+        public virtual ACCOUNT ACCOUNT { get; set; }
 
         public virtual FACULTY FACULTY { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ARTICLEHASHTAG> ARTICLEHASHTAGs { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ARTICLEIMAGE> ARTICLEIMAGEs { get; set; }
+        public virtual ICollection<COMMENTARTICLE> COMMENTARTICLEs { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EDITINGHISTORY> EDITINGHISTORies { get; set; }
+
+        public ARTICLE(ARTICLE aRTICLE)
+        {
+            ARTICLE_Type = aRTICLE.ARTICLE_Type;
+            ARTICLE_Size = aRTICLE.ARTICLE_Size;
+            ARTICLE_FileUpload = aRTICLE.ARTICLE_FileUpload;
+            ARTICLE_EditTime = aRTICLE.ARTICLE_EditTime;
+            ARTICLE_Status = aRTICLE.ARTICLE_Status;
+            ARTICLE_Tittle = aRTICLE.ARTICLE_Tittle;
+            FACULTY_Id = aRTICLE.FACULTY_Id;
+            ACCOUNT_Id = aRTICLE.ACCOUNT_Id;
+        }
     }
 }

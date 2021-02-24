@@ -1,0 +1,185 @@
+﻿@model  IEnumerable<UniversityMagazine.EF.FACULTY>
+@using UniversityMagazine.EF
+@using UniversityMagazine.Common
+@using UniversityMagazine.DAO
+@{
+    ViewBag.Title = "Faculties";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    UniversityMagazineDBContext db = new UniversityMagazineDBContext();
+    var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+    var Credentials = (IEnumerable<Credentials>)Session[CommonConstants.SESSION_CREDENTIALS];
+    var stt = 0;
+}
+@section css{
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/Content/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/Content/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/Content/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <style>
+        .dataTables_filter {
+            display: none;
+        }
+    </style>
+}
+
+@using (Html.BeginForm("Create", "Faculty", FormMethod.Post))
+{
+    <div class="modal fade" id="MyModalCreate">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:65%">
+                <div class="modal-header">
+                    <h5 id="ModalTitle" class="card-title mb-0">Add Faculty</h5>
+                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
+                </div>
+                <div class="modal-body" id="myModalBodyDivCreate">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("Edit", "Faculty", FormMethod.Post))
+{
+    <div class="modal fade" id="MyModalEdit">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:65%">
+                <div class="modal-header">
+                    <h5 id="ModalTitle" class="card-title mb-0">Edit Faculty</h5>
+                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
+                </div>
+                <div class="modal-body" id="myModalBodyDivEdit">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="card">
+    <div class="card-header p-1">
+        <h5 class="card-title text-bold float-left">Faculties</h5>
+        <div class="float-right">
+            @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_ADD == true || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
+            {
+                <a href="#" class="btn btn-success btn-sm" onclick='CreateFaculty()'><i class="fa fa-plus"></i> ADD</a>
+            }
+            @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && (x.CREDENTIAL_EDIT == true || x.CREDENTIAL_DELETE == true) || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
+            {
+                <button type="button" class="btn btn-warning btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                    Action
+                    <span class="sr-only">Action</span>
+                </button>
+                <div class="dropdown-menu" role="menu">
+                    @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_EDIT == true || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
+                    {
+                        <a href="#" class="dropdown-item" onclick='EditFaculty()'>Edit</a>
+                    }
+                    @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_DELETE == true || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
+                    {
+                        <input type="submit" value="Delete" id="Delete" class="dropdown-item" />
+                    }
+                </div>
+            }
+
+        </div>
+    </div>
+    <div class="card-body p-2">
+        @using (Html.BeginForm("Delete", "Faculty", FormMethod.Post))
+        {
+            <table class="table table-striped table-bordered table-hover table-sm" id="tableFacultys" width="100%">
+                <thead>
+                    <tr>
+                        <th><input type='checkbox' id='check' value='' /></th>
+                        <th>STT</th>
+                        <th class="search_input">Faculty</th>
+                        <th style="width:100%" class="search_input">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        stt++;
+                        <tr id="row_@item.FACULTY_Id">
+                            <td><input type='checkbox' name='chkId[]' id='checkbox' value="@item.FACULTY_Id" /></td>
+                            <td>@stt</td>
+                            <td>@(item.FACULTY_Name != null ? item.FACULTY_Name : null)</td>
+                            <td style="width: 100%;text-align:left">@(item.FACULTY_Descriptions != null ? item.FACULTY_Descriptions : null)</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+            if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && (x.CREDENTIAL_EDIT == true || x.CREDENTIAL_DELETE == true)).Count() > 0)
+            {
+                <div class="margin">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                            Action
+                            <span class="sr-only">Action</span>
+                        </button>
+                        <div class="dropdown-menu" role="menu">
+                            @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_EDIT == true).Count() > 0)
+                            {
+                                <a href="#" class="dropdown-item" onclick='EditFaculty()'>Edit</a>
+                            }
+                            @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_DELETE == true).Count() > 0)
+                            {
+                                <input type="submit" value="Delete" id="Delete" class="dropdown-item" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+@section filter{
+
+}
+@section js{
+
+    <!-- InputMask -->
+    <script src="/Content/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- Summernote -->
+    <script src="/Content/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/Content/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/Content/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/Content/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#MANAGEMENT').addClass("menu-open");
+            $('#FACULTY').addClass("active");
+
+            $('#tableFacultys .search_input').each(function () {
+                var title = $(this).text();
+                $(this).html('<input type="text" style="width:100%" placeholder="' + title + '" />');
+            });
+
+            $('#tableFacultys').removeAttr('width').css("text-align", "center").DataTable({
+                scrollY: @(Model.Count() > 15 ? "500" : "false"),
+                "scrollX": true,
+                "ordering": false,
+                "paging": false,
+                "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "Tất cả"]],
+                initComplete: function () {
+                    // Apply the search
+                    this.api().columns().every(function () {
+                        var that = this;
+
+                        $('input', this.header()).on('keyup change clear', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    });
+                },
+            });
+        });
+    </script>
+
+}

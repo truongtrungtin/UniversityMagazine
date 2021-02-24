@@ -4,13 +4,12 @@ namespace UniversityMagazine.EF
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("Role")]
-    public partial class Role
+    public partial class ROLE
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Role()
+        public ROLE()
         {
             CREDENTIALs = new HashSet<CREDENTIAL>();
         }

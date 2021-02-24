@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,7 +7,6 @@ namespace UniversityMagazine.Common
     public class HasCredentialAttribute : AuthorizeAttribute
     {
         public string ROLE_Code { set; get; }
-        public string ROLEGROUP_Name { set; get; }
         public bool CREDENTIAL_VIEW { set; get; }
         public bool CREDENTIAL_ADD { set; get; }
         public bool CREDENTIAL_EDIT { set; get; }
@@ -21,14 +19,14 @@ namespace UniversityMagazine.Common
                 return false;
             }
 
-            IEnumerable<Credential> privilegeLevels = this.GetCredentialByLoggedInUser(); // Call another method to get rights of the user from DB
+            IEnumerable<Credentials> privilegeLevels = this.GetCredentialByLoggedInUser(); // Call another method to get rights of the user from DB
             foreach (var item in privilegeLevels)
             {
-                if (item.ROLEGROUP_Name == "ADMIN")
+                if (item.ROLEGROUP_Code == "ADMIN")
                 {
                     return true;
                 }
-                else if (item.ROLEGROUP_Name == ROLEGROUP_Name)
+                else if (item.ROLE_Code == ROLE_Code)
                 {
                     if (item.CREDENTIAL_VIEW == CREDENTIAL_VIEW && item.CREDENTIAL_VIEW == true)
                     {
@@ -66,7 +64,7 @@ namespace UniversityMagazine.Common
             {
                 filterContext.Result = new ViewResult
                 {
-                    ViewName = "~/Views/Error/Error401.cshtml"
+                    ViewName = "~/Views/Error/Error404.cshtml"
                 };
             }
             else
@@ -79,9 +77,9 @@ namespace UniversityMagazine.Common
 
 
         }
-        private IEnumerable<Credential> GetCredentialByLoggedInUser()
+        private IEnumerable<Credentials> GetCredentialByLoggedInUser()
         {
-            var credentials = (IEnumerable<Credential>)HttpContext.Current.Session[CommonConstants.SESSION_CREDENTIALS];
+            var credentials = (IEnumerable<Credentials>)HttpContext.Current.Session[CommonConstants.SESSION_CREDENTIALS];
             return credentials;
         }
     }

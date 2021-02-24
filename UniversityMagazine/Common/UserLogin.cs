@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace UniversityMagazine.Common
 {
@@ -9,5 +6,6 @@ namespace UniversityMagazine.Common
     public class UserLogin
     {
         public Guid UserID { set; get; }
+        public string RoleGroup { set; get; }
     }
 }
