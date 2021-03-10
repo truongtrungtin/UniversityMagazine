@@ -9,7 +9,7 @@
 @section breadcrumb{
     <li class="breadcrumb-item"><a href="#">Upload by students</a></li>
     <li class="breadcrumb-item">
-        @Html.ActionLink("Files", "Files")
+        @Html.ActionLink("Articles", "index")
     </li>
     <li class="breadcrumb-item active">@Model.ARTICLE_FileName</li>
 }
@@ -84,17 +84,28 @@
                 </tr>
                 <tr>
                     <td>Status</td>
-                    <td style="background-color:@(Model.ARTICLE_Status ? "#cfefcf" : "#efcfcf")">@(Model.ARTICLE_Status ? "approved" : "Unapproved")</td>
+                    <td style="background-color:@(Model.ARTICLE_Status ? "#cfefcf" : "#efcfcf")">
+                        @(Model.ARTICLE_Status ? "Approved" : "Unapproved")
+                        @if ((DateTime.Now - Model.ARTICLE_UploadTime).Value.TotalDays < 14)
+                        {
+                            if (Model.ARTICLE_Status == false)
+                            {
+                                <a href="#" class="btn btn-sm btn-success float-right" id="@Model.ARTICLE_Id" onclick='ChangeStatus(this.id)'>Accept</a>
+                            }
+                            else
+                            {
+                                <a href="#" class="btn btn-sm btn-danger float-right" id="@Model.ARTICLE_Id" onclick='ChangeStatus(this.id)'>Cancel</a>
+                            }
+                        }
+                    </td>
                 </tr>
                 <tr>
                     <td>File Upload</td>
                     <td>
                         <img class="img-circle img-sm" alt="@Model.ARTICLE_FileName" title="@Model.ARTICLE_FileName" src="@(Model.ARTICLE_Type == "pdf" ? "https://cms.greenwich.edu.vn/theme/image.php/adaptable/core/1596790129/f/pdf" : "https://cms.greenwich.edu.vn/theme/image.php/adaptable/core/1596790129/f/document")" />
                         <a href="@Model.ARTICLE_FileUpload">&ensp; @Model.ARTICLE_FileName.@Model.ARTICLE_Type</a>
-                        @if (Model.ARTICLE_Status == false && (DateTime.Now - Model.ARTICLE_UploadTime).Value.TotalDays < 14)
-                        {
-                            <a href="#" class="btn btn-sm btn-warning float-right" id="@Model.ARTICLE_FileName" onclick='ViewFileUpload(this.id)'>View file</a>
-                        }
+                        <a href="#" class="btn btn-sm btn-warning float-right" id="@Model.ARTICLE_FileName" onclick='ViewFileUpload(this.id)'>View file</a>
+
                     </td>
                 </tr>
                 <tr>
@@ -109,11 +120,11 @@
                                         {
                                         <div class="direct-chat-msg @(item.ACCOUNT_Id == session.UserID ? "right" : null)" id="row_@item.COMMENT_Id">
                                             <div class="direct-chat-infos clearfix">
-                                                <span class="direct-chat-name @(item.ACCOUNT_Id == session.UserID ? "float-right" : "float-left")">@item.ACCOUNT.ACCOUNT_Name</span>
+                                                <span class="direct-chat-name @(item.ACCOUNT_Id == session.UserID ? "float-right" : "float-left")" title="User does not exist!"> @(item.ACCOUNT !=null ? item.ACCOUNT.ACCOUNT_Name : "Unknown")</span>
                                                 <span class="direct-chat-timestamp @(item.ACCOUNT_Id == session.UserID ? "float-left" : "float-right")">@item.COMMENT_Time</span>
                                             </div>
                                             <!-- /.direct-chat-infos -->
-                                            <img class="direct-chat-img" title="@item.ACCOUNT.ACCOUNT_Name" src="@(item.ACCOUNT.ACCOUNT_Avatar != null ? item.ACCOUNT.ACCOUNT_Avatar :"/Content/dist/img/Avatar.png")">
+                                            <img class="direct-chat-img" title=" @(item.ACCOUNT !=null ? item.ACCOUNT.ACCOUNT_Name : "User does not exist!")" src="@(item.ACCOUNT != null ? item.ACCOUNT.ACCOUNT_Avatar :"/Content/dist/img/Avatar.png")">
                                             <!-- /.direct-chat-img -->
                                             <div class="direct-chat-text">
                                                 @item.COMMENT_Content
@@ -171,6 +182,17 @@
             });
         };
 
+        function ChangeStatus(id) {
+            $.ajax({
+                url: "/Upload/Articles/ChangeStatus",
+                data: { id: id },
+                dataType: "json",
+                type: "POST",
+                success: function (response) {
+                    location.reload();
+                }
+            });
+        }
 
         function DeleteCommentArticle(Id) {
             if (!confirm("Are you sure you want to delete?")) {

@@ -44,7 +44,7 @@ namespace UniversityMagazine.Areas.Management.Controllers
                     content = content.Replace("{{Email}}", user.ACCOUNT_Email);
                     content = content.Replace("{{Address}}", user.ACCOUNT_Address);
                     content = content.Replace("{{Username}}", user.ACCOUNT_Username);
-                    content = content.Replace("{{Faculty}}", "null");
+                    content = content.Replace("{{Faculty}}", user.FACULTY.FACULTY_Descriptions);
                     content = content.Replace("{{Password}}", aCCOUNT.ACCOUNT_Password);
 
                     var toEmail = ConfigurationManager.AppSettings["ToEmailAddress"].ToString();
@@ -63,7 +63,7 @@ namespace UniversityMagazine.Areas.Management.Controllers
 
         [HttpGet]
         [HasCredential(ROLE_Code = "ACCOUNT", CREDENTIAL_EDIT = true)]
-        public ActionResult Edit(Guid aCCOUNT_Id)
+        public ActionResult Edit(Guid? aCCOUNT_Id)
         {
             var session = (UserLogin)Session[CommonConstants.USER_SESSION];
             return View(new AccountDAO().GetAccountWithCreated(session.UserID, aCCOUNT_Id));

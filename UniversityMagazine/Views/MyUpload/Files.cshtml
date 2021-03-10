@@ -1,8 +1,11 @@
 ﻿@model IEnumerable<UniversityMagazine.EF.ARTICLE>
 @using System.Globalization;
+@using UniversityMagazine.Common
 @{
     ViewBag.Title = "Files";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+    var Credentials = (IEnumerable<Credentials>)Session[CommonConstants.SESSION_CREDENTIALS];
 }
 @section breadcrumb{
     <li class="breadcrumb-item"><a href="#">MyUploads</a></li>
@@ -11,31 +14,43 @@
 
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h3 class="card-title text-bold">
+        <h3 class="card-title text-bold float-left">
             Articles
-            @Html.ActionLink("Upload", "UploadFile", null, new { @class = "btn btn-primary btn-sm mb-1" })
         </h3>
+        <div class="float-right">
+            @if (Credentials.Where(x => x.ROLE_Code == "ARTICLE" && x.CREDENTIAL_ADD == true).Count() > 0)
+            {
+                @Html.ActionLink("Upload", "UploadFile", null, new { @class = "btn btn-success btn-sm" })
 
+            }
+        </div>
     </div>
     <div class="card-body">
         <ul class="mailbox-attachments d-flex align-items-stretch clearfix">
             @foreach (var item in Model)
             {
-                <li id="row_@item.ARTICLE_Id">
+            <li id="row_@item.ARTICLE_Id">
+                @if (item.ARTICLE_Type == "pdf")
+                {
                     <span class="mailbox-attachment-icon"><i class="far fa-file-pdf"></i></span>
 
-                    <div class="mailbox-attachment-info">
-                        <a href="/MyUpload/File/@item.ARTICLE_FileName/" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> @item.ARTICLE_Tittle</a> <span style="color:@(item.ARTICLE_Status ? "#cfefcf" : "red")">(@(item.ARTICLE_Status ? "approved" : "Unapproved"))</span>
-                        <span class="mailbox-attachment-size clearfix mt-1">
-                            <span>@(item.ARTICLE_Size != 0 ? String.Format(CultureInfo.InvariantCulture, "{0:0,0}", (item.ARTICLE_Size)) : null) KB</span>
-                             @if ((DateTime.Now - item.ARTICLE_UploadTime).Value.TotalDays < 1)
-                             {
-                                <a href="#" class="btn btn-danger btn-sm float-right DeleteFile" title="Delete" id="@item.ARTICLE_Id"><i class="fas fa-times"></i></a>
-                             }
-                            <a href="@item.ARTICLE_FileUpload" class="btn btn-default btn-sm float-right"><i class="fas fa-cloud-download-alt"></i></a>
-                        </span>
-                    </div>
-                </li>
+                }
+                else
+                {
+                    <span class="mailbox-attachment-icon"><i class="far fa-file-word"></i></span>
+                }
+
+                <div class="mailbox-attachment-info">
+                    <a href="/MyUpload/File/@item.ARTICLE_FileName/" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> @item.ARTICLE_Tittle</a> <span style="color:@(item.ARTICLE_Status ? "#cfefcf" : "red")">(@(item.ARTICLE_Status ? "approved" : "Unapproved"))</span>
+                    <span class="mailbox-attachment-size clearfix mt-1">
+                        <span>@(item.ARTICLE_Size != 0 ? String.Format(CultureInfo.InvariantCulture, "{0:0,0}", (item.ARTICLE_Size)) : null) KB</span>
+                        @if ((DateTime.Now - item.ARTICLE_UploadTime).Value.TotalDays < 1)
+                        {
+                            <a href="#" class="btn btn-danger btn-sm float-right DeleteFile" title="Delete" id="@item.ARTICLE_Id"><i class="fas fa-times"></i></a>
+                        }
+                    </span>
+                </div>
+            </li>
             }
 
         </ul>

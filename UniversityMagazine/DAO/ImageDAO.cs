@@ -14,7 +14,7 @@ namespace UniversityMagazine.DAO
         {
             db = new UniversityMagazineDBContext();
         }
-        public IMAGE GetById(Guid iMAGE_Id)
+        public IMAGE GetById(Guid? iMAGE_Id)
         {
             return db.IMAGEs.Find(iMAGE_Id);
         }

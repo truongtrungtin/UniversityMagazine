@@ -23,7 +23,7 @@ namespace UniversityMagazine.EF
         [StringLength(50)]
         public string IMAGE_Type { get; set; }
 
-        public long? Image_Size { get; set; }
+        public long? IMAGE_Size { get; set; }
 
         [StringLength(500)]
         public string IMAGE_FileUpload { get; set; }
@@ -33,7 +33,7 @@ namespace UniversityMagazine.EF
         [StringLength(500)]
         public string IMAGE_Tittle { get; set; }
 
-        public bool? IMAGE_Status { get; set; }
+        public bool IMAGE_Status { get; set; }
 
         public Guid? FACULTY_Id { get; set; }
 

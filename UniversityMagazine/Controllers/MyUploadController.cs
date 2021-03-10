@@ -43,36 +43,42 @@ namespace UniversityMagazine.Controllers
         public ActionResult UploadFile(ARTICLE aRTICLE, HttpPostedFileBase file)
         {
             var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+            var user = new AccountDAO().GetById(session.UserID);
             Guid id = Guid.NewGuid();
             aRTICLE.ARTICLE_Id = id;
             aRTICLE.ACCOUNT_Id = session.UserID;
-            aRTICLE.FACULTY_Id = new AccountDAO().GetById(session.UserID).FACULTY_Id;
-            if (file != null)
+            aRTICLE.FACULTY_Id = user.FACULTY_Id;
+            if (file != null && (Path.GetExtension(file.FileName) == ".docx" || Path.GetExtension(file.FileName) == ".doc" || Path.GetExtension(file.FileName) == ".pdf"))
             {
-                string fileName = new ArticleDAO().GetCode(new AccountDAO().GetById(session.UserID).ACCOUNT_Name);
+                string fileName = new ArticleDAO().GetCode(new StringHelper().RemoveUnicode(user.ACCOUNT_Name));
                 aRTICLE.ARTICLE_FileName = fileName;
                 string extension = Path.GetExtension(file.FileName);
                 fileName += extension;
-                string Url = "/Articles/" + session.UserID + "/" + id + "/Files/" + fileName;
-                fileName = Path.Combine(Server.MapPath("~/Articles/" + session.UserID + "/" + id + "/Files/"), fileName);
-                if (!Directory.Exists(Server.MapPath("~/Articles/" + session.UserID + "/" + id + "/Files/")))
+                string Url = "/Articles/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" + user.ACCOUNT_Username + "/" +fileName;
+                fileName = Path.Combine(Server.MapPath("~/Articles/"+ DateTime.Now.ToString("yyyy") + "/"+ DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" +  user.ACCOUNT_Username + "/"), fileName);
+                if (!Directory.Exists(Server.MapPath("~/Articles/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" +  user.ACCOUNT_Username + "/")))
                 {
-                    Directory.CreateDirectory(Server.MapPath("~/Articles/" + session.UserID + "/" + id + "/Files/"));
+                    Directory.CreateDirectory(Server.MapPath("~/Articles/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" +  user.ACCOUNT_Username + "/"));
                 }
                 aRTICLE.ARTICLE_FileUpload = Url;
                 aRTICLE.ARTICLE_Type = extension.Replace(".", "");
                 aRTICLE.ARTICLE_Size = file.ContentLength;
                 file.SaveAs(fileName);
-            }
-            if (new ArticleDAO().Create(aRTICLE))
-            {
-                SetAlert("Đã thêm thành công!", "success");
+                if (new ArticleDAO().Create(aRTICLE))
+                {
+                    SetAlert("Đã thêm thành công!", "success");
+                    return RedirectToAction("File", new { Id = aRTICLE.ARTICLE_FileName });
+                }
+                else
+                {
+                    SetAlert("Thêm không thành công!", "warning");
+                }
             }
             else
             {
-                SetAlert("Thêm không thành công!", "warning");
+                SetAlert("Chưa có file hoặc Định dạng file upload không đúng!", "warning");
             }
-            return RedirectToAction("File", new { Id = aRTICLE.ARTICLE_FileName });
+            return RedirectToAction("Files");
         }
 
         [HttpGet]
@@ -88,31 +94,38 @@ namespace UniversityMagazine.Controllers
         public ActionResult EditFileUpload(ARTICLE aRTICLE, HttpPostedFileBase file)
         {
             var session = (UserLogin)Session[CommonConstants.USER_SESSION];
-            if (file != null)
+            var user = new AccountDAO().GetById(session.UserID);
+            if (file != null && (Path.GetExtension(file.FileName) == ".docx" || Path.GetExtension(file.FileName) == ".doc" || Path.GetExtension(file.FileName) == ".pdf"))
             {
-                string fileName = aRTICLE.ARTICLE_FileName;
+                string fileName = new ArticleDAO().GetCode(new StringHelper().RemoveUnicode(user.ACCOUNT_Name));
                 string extension = Path.GetExtension(file.FileName);
                 fileName += extension;
-                string Url = "/Articles/" + session.UserID + "/" + aRTICLE.ARTICLE_Id + "/Files/" + fileName;
-                fileName = Path.Combine(Server.MapPath("~/Articles/" + session.UserID + "/" + aRTICLE.ARTICLE_Id + "/Files/"), fileName);
-                if (!Directory.Exists(Server.MapPath("~/Articles/" + session.UserID + "/" + aRTICLE.ARTICLE_Id + "/Files/")))
+                string Url = "/Articles/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" +  user.ACCOUNT_Username  +"/"+ fileName;
+                fileName = Path.Combine(Server.MapPath("~/Articles/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" +  user.ACCOUNT_Username ), fileName);
+                if (!Directory.Exists(Server.MapPath("~/Articles/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" +  user.ACCOUNT_Username )))
                 {
-                    Directory.CreateDirectory(Server.MapPath("~/Articles/" + session.UserID + "/" + aRTICLE.ARTICLE_Id + "/Files/"));
+                    Directory.CreateDirectory(Server.MapPath("~/Articles/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" +  user.ACCOUNT_Username ));
                 }
                 aRTICLE.ARTICLE_FileUpload = Url;
                 aRTICLE.ARTICLE_Type = extension.Replace(".", "");
                 aRTICLE.ARTICLE_Size = file.ContentLength;
                 file.SaveAs(fileName);
-            }
-            if (new ArticleDAO().Edit(aRTICLE, session.UserID))
-            {
-                SetAlert("Successful editing!", "success");
+                if (new ArticleDAO().Edit(aRTICLE, session.UserID))
+                {
+                    SetAlert("Successful editing!", "success");
+                    return RedirectToAction("File", new { Id = aRTICLE.ARTICLE_FileName });
+                }
+                else
+                {
+                    SetAlert("Editing failed!", "warning");
+                }
             }
             else
             {
-                SetAlert("Editing failed!", "warning");
+                SetAlert("Chưa có file hoặc Định dạng file upload không đúng!", "warning");
             }
-            return RedirectToAction("File", new { Id = aRTICLE.ARTICLE_FileName });
+            return RedirectToAction("Files");
+
         }
 
         [HttpPost]
@@ -154,11 +167,11 @@ namespace UniversityMagazine.Controllers
         {
             if (new CommentArticleDAO().Edit(cOMMENTARTICLE))
             {
-                SetAlert("Comment successfully edited!", "success");
+                SetAlert("Comment đã chỉnh sửa thành công!", "success");
             }
             else
             {
-                SetAlert("Comment editing failed!", "warning");
+                SetAlert("Comment chỉnh sửa không thành công!", "warning");
             }
 
             return RedirectToAction("File", new { id = new ArticleDAO().GetById(cOMMENTARTICLE.ARTICLE_Id).ARTICLE_FileName });
@@ -174,10 +187,10 @@ namespace UniversityMagazine.Controllers
 
         [HttpGet]
         [HasCredential(ROLE_Code = "IMAGES", CREDENTIAL_VIEW = true)]
-        public ActionResult Image(string iMAGE_FileName)
+        public ActionResult Image(string id)
         {
             var session = (UserLogin)Session[CommonConstants.USER_SESSION];
-            var model = new ImageDAO().GetByFileName(session.UserID, iMAGE_FileName);
+            var model = new ImageDAO().GetByFileName(session.UserID, id);
             return View(model);
         }
         [HasCredential(ROLE_Code = "IMAGES", CREDENTIAL_VIEW = true)]
@@ -200,26 +213,27 @@ namespace UniversityMagazine.Controllers
         public ActionResult UploadImage(IMAGE iMAGES, HttpPostedFileBase image)
         {
             var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+            var user = new AccountDAO().GetById(session.UserID);
             Guid id = Guid.NewGuid();
             iMAGES.IMAGE_Id = id;
             iMAGES.ACCOUNT_Id = session.UserID;
-            iMAGES.FACULTY_Id = new AccountDAO().GetById(session.UserID).FACULTY_Id;
+            iMAGES.FACULTY_Id = user.FACULTY_Id;
             if (image != null)
             {
-                string fileName = new ArticleDAO().GetCode(new AccountDAO().GetById(session.UserID).ACCOUNT_Name);
-                iMAGES.IMAGE_FileName = fileName;
+                string fileName = new ImageDAO().GetCode(new StringHelper().RemoveUnicode(user.ACCOUNT_Name));
                 string extension = Path.GetExtension(image.FileName);
+                iMAGES.IMAGE_FileName = fileName;
                 fileName += extension;
-                string Url = "/Articles/" + session.UserID + "/" + id + "/Files/" + fileName;
-                fileName = Path.Combine(Server.MapPath("~/Articles/" + session.UserID + "/" + id + "/Files/"), fileName);
-                if (!Directory.Exists(Server.MapPath("~/Articles/" + session.UserID + "/" + id + "/Files/")))
+                string Url = "/Images/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" + user.ACCOUNT_Username + "/"+ fileName;
+                fileName = Path.Combine(Server.MapPath("~/Images/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" + user.ACCOUNT_Username + "/"), fileName);
+                if (!Directory.Exists(Server.MapPath("~/Images/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" + user.ACCOUNT_Username + "/")))
                 {
-                    Directory.CreateDirectory(Server.MapPath("~/Articles/" + session.UserID + "/" + id + "/Files/"));
+                    Directory.CreateDirectory(Server.MapPath("~/Images/" + DateTime.Now.ToString("yyyy") + "/" + DateTime.Now.ToString("MM") + "/" + user.FACULTY.FACULTY_Code + "/" + user.ACCOUNT_Username + "/"));
                 }
                 iMAGES.IMAGE_FileUpload = Url;
 
                 iMAGES.IMAGE_Type = extension.Replace(".", "");
-                iMAGES.Image_Size = image.ContentLength;
+                iMAGES.IMAGE_Size = image.ContentLength;
                 image.SaveAs(fileName);
             }
             if (new ImageDAO().Create(iMAGES))
@@ -241,5 +255,53 @@ namespace UniversityMagazine.Controllers
             return Json(new { data = new ImageDAO().Delete(IMAGE_Id) });
         }
 
+        [HttpPost]
+        [HasCredential(ROLE_Code = "COMMENTSIMAGE", CREDENTIAL_ADD = true)]
+        public ActionResult AddCommentImage(COMMENTIMAGE cOMMENTIMAGE)
+        {
+            var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+            cOMMENTIMAGE.ACCOUNT_Id = session.UserID;
+            if (new CommentImageDAO().Create(cOMMENTIMAGE))
+            {
+                SetAlert("Comment thành công!", "success");
+            }
+            else
+            {
+                SetAlert("Comment không thành công!", "warning");
+            }
+
+            return RedirectToAction("Image", new { id = new ImageDAO().GetById(cOMMENTIMAGE.IMAGE_Id).IMAGE_FileName });
+        }
+
+        [HttpGet]
+        [HasCredential(ROLE_Code = "COMMENTSIMAGE", CREDENTIAL_EDIT = true)]
+        public PartialViewResult EditCommentImage(int cOMMENT_Id)
+        {
+            return PartialView(new CommentImageDAO().GetById(cOMMENT_Id));
+        }
+
+        [HttpPost]
+        [HasCredential(ROLE_Code = "COMMENTSIMAGE", CREDENTIAL_EDIT = true)]
+        public ActionResult EditCommentImage(COMMENTIMAGE cOMMENTIMAGE)
+        {
+            if (new CommentImageDAO().Edit(cOMMENTIMAGE))
+            {
+                SetAlert("Comment đã chỉnh sửa thành công!", "success");
+            }
+            else
+            {
+                SetAlert("Comment chỉnh sửa không thành công!", "warning");
+            }
+
+            return RedirectToAction("Image", new { id = new ImageDAO().GetById(cOMMENTIMAGE.IMAGE_Id).IMAGE_FileName });
+        }
+
+
+        [HttpPost]
+        [HasCredential(ROLE_Code = "COMMENTSIMAGE", CREDENTIAL_DELETE = true)]
+        public JsonResult DeleteCommentImage(int cOMMENT_Id)
+        {
+            return Json(new { data = new CommentImageDAO().Delete(cOMMENT_Id) });
+        }
     }
 }

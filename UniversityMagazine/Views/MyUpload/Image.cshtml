@@ -1,0 +1,213 @@
+﻿@model UniversityMagazine.EF.IMAGE
+@using System.Globalization;
+@using UniversityMagazine.Common
+@{
+    ViewBag.Title = "Image";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+}
+@section breadcrumb{
+    <li class="breadcrumb-item"><a href="#">MyUploads</a></li>
+    <li class="breadcrumb-item">
+        @Html.ActionLink("Images", "Images")
+    </li>
+    <li class="breadcrumb-item active">@Model.IMAGE_FileName</li>
+}
+@section css{
+    <style>
+        td {
+            font-size: 16px !important;
+            font-weight: 400 !important;
+        }
+
+        th {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+        }
+
+        .table td, .table th {
+            padding: 3px !important;
+        }
+    </style>
+}
+
+@using (Html.BeginForm("EditCommentImage", "MyUpload", FormMethod.Post))
+{
+    <div class="modal fade" id="MyModalEdit">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="ModalTitle" class="card-title mb-0">Edit comment</h5>
+                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
+                </div>
+                <div class="modal-body" id="myModalBodyDivEdit">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("EditImageUpload", "MyUpload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal fade" id="MyModalEditImage">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="ModalTitle" class="card-title mb-0">Choose Image</h5>
+                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
+                </div>
+                <div class="modal-body" id="myModalBodyDivEditImage">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="card card-primary card-outline">
+    <div class="card-body">
+        <table class="table table-hover table-striped table-bordered table-responsive-sm" width="100%">
+            <tbody>
+                <tr>
+                    <td width="10%">Title</td>
+                    <td width="90%">@Model.IMAGE_Tittle</td>
+                </tr>
+                <tr>
+                    <td>Type</td>
+                    <td>@Model.IMAGE_Type</td>
+                </tr>
+                <tr>
+                    <td>Size</td>
+                    <td>@(Model.IMAGE_Size != 0 ? String.Format(CultureInfo.InvariantCulture, "{0:0,0}", (Model.IMAGE_Size)) : null) KB</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td style="background-color:@(Model.IMAGE_Status ? "#cfefcf" : "#efcfcf")">@(Model.IMAGE_Status ? "approved" : "Unapproved")</td>
+                </tr>
+                <tr>
+                    <td>Image Upload</td>
+                    <td>
+                        <img class="img-circle img-sm" alt="@Model.IMAGE_FileName" title="@Model.IMAGE_FileName" src="@(Model.IMAGE_Type == "pdf" ? "https://cms.greenwich.edu.vn/theme/image.php/adaptable/core/1596790129/f/pdf" : "https://cms.greenwich.edu.vn/theme/image.php/adaptable/core/1596790129/f/document")" />
+                        <a href="@Model.IMAGE_FileUpload">&ensp; @Model.IMAGE_FileName.@Model.IMAGE_Type</a>
+                        @if (Model.IMAGE_Status == false && (DateTime.Now - Model.IMAGE_UploadTime).Value.TotalDays < 14)
+                        {
+                            <a href="#" class="btn btn-sm btn-warning float-right" id="@Model.IMAGE_FileName" onclick='EditImageUpload(this.id)'>Edit file</a>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>Comment</td>
+                    <td>
+                        @if (Model.COMMENTIMAGEs.Count() > 0)
+                        {
+                            <div class="card direct-chat direct-chat-secondary">
+                                <div class="card-body">
+                                    <div class="direct-chat-messages">
+                                        @foreach (var item in Model.COMMENTIMAGEs)
+                                        {
+                                            <div class="direct-chat-msg @(item.ACCOUNT_Id == session.UserID ? "right" : null)" id="row_@item.COMMENT_Id">
+                                                <div class="direct-chat-infos clearfix">
+                                                    <span class="direct-chat-name @(item.ACCOUNT_Id == session.UserID ? "float-right" : "float-left")">@item.ACCOUNT.ACCOUNT_Name</span>
+                                                    <span class="direct-chat-timestamp @(item.ACCOUNT_Id == session.UserID ? "float-left" : "float-right")">@item.COMMENT_Time</span>
+                                                </div>
+                                                <!-- /.direct-chat-infos -->
+                                                <img class="direct-chat-img" title="@item.ACCOUNT.ACCOUNT_Name" src="@(item.ACCOUNT.ACCOUNT_Avatar != null ? item.ACCOUNT.ACCOUNT_Avatar :"/Content/dist/img/Avatar.png")">
+                                                <!-- /.direct-chat-img -->
+                                                <div class="direct-chat-text">
+                                                    @item.COMMENT_Content
+
+                                                </div>
+                                                @if (item.ACCOUNT_Id == session.UserID)
+                                                {
+                                                    if ((DateTime.Now - item.COMMENT_Time).Value.TotalMinutes < 10)
+                                                    {
+                                                        <span class="direct-chat-timestamp float-left"><a href="#" title="Edit" id="@item.COMMENT_Id" onclick='EditCommentImage(this.id)' style="color:#697582">Edit&ensp;</a></span>
+                                                        <span class="direct-chat-timestamp float-left"><a href="#" title="Delete" id="@item.COMMENT_Id" onclick='DeleteCommentImage(this.id)' style="color:#697582">Delete</a></span>
+                                                    }
+                                                }
+                                                <!-- /.direct-chat-text -->
+                                            </div>
+
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @using (Html.BeginForm("AddCommentImage", "MyUpload", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(x => x.IMAGE_Id);
+                            <div class="input-group">
+                                <input type="text" name="COMMENT_Content" placeholder="Type comment ..." class="form-control">
+                                <span class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Send</button>
+                                </span>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    @if ((DateTime.Now - Model.IMAGE_UploadTime).Value.TotalDays < 1)
+    {
+        <div class="card-footer">
+            <div class="float-right">
+                <a href="#" class="btn btn-sm btn-danger" id="@Model.IMAGE_Id" onclick='DeleteImage(this.id)'>Delete</a>
+            </div>
+        </div>
+    }
+
+</div>
+@section js{
+    <script>
+        function EditCommentImage(Id) {
+            var url = "/MyUpload/EditCommentImage?cOMMENT_Id=" + Id;
+            $("#myModalBodyDivEdit").load(url, function () {
+                $("#MyModalEdit").modal();
+            });
+        };
+
+        function EditImageUpload(Id) {
+            var url = "/MyUpload/EditImageUpload?iMAGE_FileName=" + Id;
+            $("#myModalBodyDivEditImage").load(url, function () {
+                $("#MyModalEditImage").modal();
+            });
+        };
+
+
+        function DeleteCommentImage(Id) {
+            if (!confirm("Are you sure you want to delete?")) {
+                return false;
+            } else {
+                $.ajax({
+                    url: "/MyUpload/DeleteCommentImage?cOMMENT_Id=" + Id,
+                    dataType: "json",
+                    type: "Post",
+                    success: function (res) {
+                        if (res.data) {
+                            $('#row_' + Id).remove();
+                            location.reload();
+                        }
+                    }
+                });
+            }
+
+        };
+
+        function DeleteImage(Id) {
+            if (!confirm("Are you sure you want to delete?")) {
+                return false;
+            } else {
+                $.ajax({
+                    url: "/MyUpload/DeleteImageJson?IMAGE_Id=" + Id,
+                    dataType: "json",
+                    type: "Post",
+                    success: function (res) {
+                        if (res.data) {
+                            window.location.replace("/MyUpload/Images");
+                        }
+                    }
+                });
+            }
+        };
+    </script>
+}

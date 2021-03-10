@@ -32,7 +32,7 @@
 {
     <div class="modal fade" id="MyModalCreate">
         <div class="modal-dialog">
-            <div class="modal-content" style="width:65%">
+            <div class="modal-content">
                 <div class="modal-header">
                     @if (session.RoleGroup == "ADMIN")
                     {
@@ -60,7 +60,7 @@
 {
     <div class="modal fade" id="MyModalEdit">
         <div class="modal-dialog">
-            <div class="modal-content" style="width:65%">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="ModalTitle" class="card-title mb-0">Edit Account</h5>
                     <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
@@ -90,22 +90,22 @@
             }
 
             <div class="float-right">
-                @if (Credentials.Where(x => x.ROLE_Code == "ACCOUNT" && x.CREDENTIAL_ADD == true).Count() > 0)
+                @if (Credentials.Where(x => x.ROLE_Code == "ACCOUNT" && x.CREDENTIAL_ADD == true).Count() > 0 || session.RoleGroup == "ADMIN")
                 {
-                    <a href="#" class="btn btn-success btn-sm" onclick='CreateAccount()'><i class="fa fa-plus"></i> ADD</a>
+                    <a href="#" class="btn btn-success btn-sm" onclick='CreateAccount()'>Add</a>
                 }
-                @if (Credentials.Where(x => x.ROLE_Code == "ACCOUNT" && (x.CREDENTIAL_EDIT == true || x.CREDENTIAL_DELETE == true)).Count() > 0)
+                @if (Credentials.Where(x => x.ROLE_Code == "ACCOUNT" && (x.CREDENTIAL_EDIT == true || x.CREDENTIAL_DELETE == true)).Count() > 0 || session.RoleGroup == "ADMIN")
                 {
                     <button type="button" class="btn btn-warning btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
                         Action
                         <span class="sr-only">Action</span>
                     </button>
                     <div class="dropdown-menu" role="menu">
-                        @if (Credentials.Where(x => x.ROLE_Code == "ACCOUNT" && x.CREDENTIAL_EDIT == true).Count() > 0)
+                        @if (Credentials.Where(x => x.ROLE_Code == "ACCOUNT" && x.CREDENTIAL_EDIT == true).Count() > 0 || session.RoleGroup == "ADMIN")
                         {
                             <a href="#" class="dropdown-item" onclick='EditAccount()'>Edit</a>
                         }
-                        @if (Credentials.Where(x => x.ROLE_Code == "ACCOUNT" && x.CREDENTIAL_DELETE == true).Count() > 0)
+                        @if (Credentials.Where(x => x.ROLE_Code == "ACCOUNT" && x.CREDENTIAL_DELETE == true).Count() > 0 || session.RoleGroup == "ADMIN")
                         {
 
                             <input type="submit" value="Delete" id="Delete" class="dropdown-item" />
@@ -202,7 +202,8 @@
                     });
                 },
             });
-            $('[data-mask]').inputmask('dd/mm/yyyy');
+            $('[data-mask]').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            
             $('.select2').select2({ theme: 'bootstrap4', allowClear: true });
         });
     </script>

@@ -71,6 +71,17 @@
                     $("#Upload").attr("disabled", true);
                 }
             });
+
+
+            $('#file').change(function () {
+                var ext = $('#file').val().split('.').pop().toLowerCase();
+                //Allowed file types
+                if ($.inArray(ext, ['pdf', 'doc', 'docx']) == -1) {
+                    alert('Chỉ chọn file .pdf, .doc hoặc docx!');
+                    $('#file').val("");
+                    $('.custom-file-label').html("Choose file");
+                }
+            })
         });
     </script>
 }

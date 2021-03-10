@@ -71,6 +71,16 @@
                     $("#Upload").attr("disabled", true);
                 }
             });
+
+            $('#image').change(function () {
+                var ext = $('#image').val().split('.').pop().toLowerCase();
+                //Allowed file types
+                if ($.inArray(ext, ['png', 'jpg', 'jpeg']) == -1) {
+                    alert('Chỉ chọn file .png, .jpg hoặc jpeg!');
+                    $('#image').val("");
+                    $('.custom-file-label').html("Choose file");
+                }
+            })
         });
     </script>
 }

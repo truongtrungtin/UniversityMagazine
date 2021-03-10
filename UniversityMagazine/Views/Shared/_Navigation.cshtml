@@ -104,7 +104,7 @@
 
                     <li class="nav-item" id="MYUPLOAD">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-copy"></i>
+                            <i class="nav-icon fa fa-upload"></i>
                             <p>
                                 My Uploads <i class="fas fa-angle-left right"></i>
                             </p>              
@@ -114,7 +114,7 @@
                             {
                                 <li class="nav-item">
                                     <a href="~/MyUpload/Files" class="nav-link" id="FILES">
-                                        <i class="far fa-circle nav-icon"></i>
+                                        <i class="far fa-file-word nav-icon"></i>
                                         <p>Articles</p>
                                     </a>
                                 </li>
@@ -123,7 +123,7 @@
                             {
                                 <li class="nav-item">
                                     <a href="~/MyUpload/Images" class="nav-link" id="IMAGES">
-                                        <i class="far fa-circle nav-icon"></i>
+                                        <i class="far fa-file-image nav-icon"></i>
                                         <p>Images</p>
                                     </a>
                                 </li>
@@ -133,10 +133,9 @@
                 }
                 @if (Credentials.Where(x => (x.ROLE_Code == "BROWSEARTICLES" && x.CREDENTIAL_VIEW == true) || (x.ROLE_Code == "BROWSEIMAGES" && x.CREDENTIAL_VIEW == true)).Count() > 0)
                 {
-
                     <li class="nav-item" id="BROWSE">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-copy"></i>
+                            <i class="nav-icon fa fa-upload"></i>
                             <p>
                                 Upload by students <i class="fas fa-angle-left right"></i>
                             </p>
@@ -146,7 +145,8 @@
                             {
                                 <li class="nav-item">
                                     <a href="~/Upload/Articles/" class="nav-link" id="ARTICLES">
-                                        <i class="far fa-circle nav-icon"></i>
+                                        <i class="far fa-file-word nav-icon"></i>
+
                                         <p>Articles</p>
                                     </a>
                                 </li>
@@ -155,7 +155,7 @@
                             {
                                 <li class="nav-item">
                                     <a href="~/Upload/Images/" class="nav-link" id="IMAGES">
-                                        <i class="far fa-circle nav-icon"></i>
+                                        <i class="far fa-file-image nav-icon"></i>
                                         <p>Images</p>
                                     </a>
                                 </li>
@@ -167,7 +167,7 @@
                 {
                     <li class="nav-item" id="MANAGEMENT">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-copy"></i>
+                            <i class="nav-icon fa fa-sitemap"></i>
                             <p>
                                 Management
                                 <i class="fas fa-angle-left right"></i>
@@ -178,7 +178,7 @@
                             {
                                 <li class="nav-item">
                                     <a href="~/Management/Faculty/" class="nav-link" id="FACULTY">
-                                        <i class="far fa-circle nav-icon"></i>
+                                        <i class="fa fa-book nav-icon"></i>
                                         <p>Faculties</p>
                                     </a>
                                 </li>
@@ -187,7 +187,7 @@
                             {
                                 <li class="nav-item">
                                     <a href="~/Management/Account/" class="nav-link" id="ACCOUNT">
-                                        <i class="far fa-circle nav-icon"></i>
+                                        <i class="fa fa-users nav-icon"></i>
                                         <p>
                                             Accounts
                                         </p>
@@ -202,7 +202,7 @@
                 {
                     <li class="nav-item" id="CREDENTIAL">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-copy"></i>
+                            <i class="nav-icon fa fa-american-sign-language-interpreting"></i>
                             <p>
                                 Credentials
                                 <i class="fas fa-angle-left right"></i>
@@ -213,7 +213,7 @@
                             {
                                 <li class="nav-item">
                                     <a href="~/Credential/Role" class="nav-link" id="ROLE">
-                                        <i class="far fa-circle nav-icon"></i>
+                                        <i class="fa fa-list nav-icon"></i>
                                         <p>
                                             Role
                                         </p>
@@ -224,7 +224,7 @@
                             {
                                 <li class="nav-item">
                                     <a href="~/Credential/RoleGroup" class="nav-link" id="ROLEGROUP">
-                                        <i class="far fa-circle nav-icon"></i>
+                                        <i class="fa fa-users nav-icon"></i>
                                         <p>
                                             Role Group
                                         </p>

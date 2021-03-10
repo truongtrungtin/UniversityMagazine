@@ -15,7 +15,7 @@ namespace UniversityMagazine.Areas.Management.DAO
         {
             db = new UniversityMagazineDBContext();
         }
-        public ACCOUNT GetById(Guid aCCOUNT_Id)
+        public ACCOUNT GetById(Guid? aCCOUNT_Id)
         {
             return db.ACCOUNTs.Find(aCCOUNT_Id);
         }
@@ -140,7 +140,7 @@ namespace UniversityMagazine.Areas.Management.DAO
         {
             aCCOUNT.ACCOUNT_Id = Guid.NewGuid();
             aCCOUNT.ACCOUNT_Password = GetMD5(new StringHelper().RandomPassword());
-            aCCOUNT.ACCOUNT_Username = GetUsername(aCCOUNT.ACCOUNT_Name);
+            aCCOUNT.ACCOUNT_Username = GetUsername(new StringHelper().RemoveUnicode(aCCOUNT.ACCOUNT_Name));
             aCCOUNT.ACCOUNT_CreateTime = DateTime.Now;
             aCCOUNT.ACCOUNT_Avatar = "/Content/dist/img/Avatar.png";
             var user = db.ACCOUNTs.Add(aCCOUNT);
@@ -207,11 +207,11 @@ namespace UniversityMagazine.Areas.Management.DAO
             }
         }
 
-        public ACCOUNT GetAccountWithCreated(Guid CREATOR, Guid aCCOUNT_Id)
+        public ACCOUNT GetAccountWithCreated(Guid? CREATOR, Guid? aCCOUNT_Id)
         {
             return db.ACCOUNTs.SingleOrDefault(x => x.ACCOUNT_CREATOR == CREATOR && x.ACCOUNT_Id == aCCOUNT_Id);
         } 
-        public IEnumerable<ACCOUNT> GetAccountsWithCreated(Guid CREATOR)
+        public IEnumerable<ACCOUNT> GetAccountsWithCreated(Guid? CREATOR)
         {
             return db.ACCOUNTs.Where(x => x.ACCOUNT_CREATOR == CREATOR).OrderByDescending(x => x.ACCOUNT_CreateTime);
         }

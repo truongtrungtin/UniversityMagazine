@@ -127,7 +127,7 @@ namespace UniversityMagazine.Areas.Upload.DAO
         }
 
 
-        public bool Edit(ARTICLE aRTICLE, Guid aCCOUNT_Id)
+        public bool Edit(ARTICLE aRTICLE, Guid? aCCOUNT_Id)
         {
             try
             {
@@ -144,6 +144,11 @@ namespace UniversityMagazine.Areas.Upload.DAO
                 data.ARTICLE_Size = aRTICLE.ARTICLE_Size;
                 data.ARTICLE_EditTime = DateTime.Now;
                 data.ARTICLE_Tittle = aRTICLE.ARTICLE_Tittle;
+                if (aRTICLE.ARTICLE_FileUpload != null && aRTICLE.ARTICLE_FileUpload != "")
+                {
+                    data.ARTICLE_FileUpload = aRTICLE.ARTICLE_FileUpload;
+
+                }
                 db.EDITINGHISTORies.Add(log);
                 db.SaveChanges();
                 return true;
@@ -167,6 +172,15 @@ namespace UniversityMagazine.Areas.Upload.DAO
             {
                 return false;
             }
+        }
+
+        public bool? ChangeStatus(Guid? id)
+        {
+            var item = db.ARTICLEs.Find(id);
+            item.ARTICLE_Status = !item.ARTICLE_Status;
+            db.SaveChanges();
+
+            return item.ARTICLE_Status;
         }
 
     }

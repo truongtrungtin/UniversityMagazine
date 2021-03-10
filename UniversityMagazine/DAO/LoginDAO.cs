@@ -125,7 +125,20 @@ namespace UniversityMagazine.DAO
                 else
                 {
                     if (result.ACCOUNT_Password == aCCOUNT_Password)
-                        return 1;
+                        if (result.ROLEGROUP.ROLEGROUP_Code == "MARKETINGMANAGER" || result.ROLEGROUP.ROLEGROUP_Code == "ADMIN")
+                        {
+                            return 1;
+                        }
+                        else if (result.FACULTY.FACULTY_Status == true)
+                        {
+                            return 1;
+                        }
+                        else
+                        {
+                            return -3;
+                        }
+
+
                     else
                         return -2;
                 }

@@ -8,7 +8,6 @@
     UniversityMagazineDBContext db = new UniversityMagazineDBContext();
     var session = (UserLogin)Session[CommonConstants.USER_SESSION];
     var Credentials = (IEnumerable<Credentials>)Session[CommonConstants.SESSION_CREDENTIALS];
-    var stt = 0;
 }
 @section css{
 
@@ -23,12 +22,16 @@
         }
     </style>
 }
+@section breadcrumb{
+    <li class="breadcrumb-item">Management</li>
+    <li class="breadcrumb-item active"><a href="#">@ViewBag.Title</a></li>
 
+}
 @using (Html.BeginForm("Create", "Faculty", FormMethod.Post))
 {
     <div class="modal fade" id="MyModalCreate">
         <div class="modal-dialog">
-            <div class="modal-content" style="width:65%">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="ModalTitle" class="card-title mb-0">Add Faculty</h5>
                     <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
@@ -43,7 +46,7 @@
 {
     <div class="modal fade" id="MyModalEdit">
         <div class="modal-dialog">
-            <div class="modal-content" style="width:65%">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="ModalTitle" class="card-title mb-0">Edit Faculty</h5>
                     <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
@@ -55,13 +58,13 @@
     </div>
 }
 
-<div class="card">
+<div class="card card-primary card-outline">
     <div class="card-header p-1">
         <h5 class="card-title text-bold float-left">Faculties</h5>
         <div class="float-right">
             @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_ADD == true || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
             {
-                <a href="#" class="btn btn-success btn-sm" onclick='CreateFaculty()'><i class="fa fa-plus"></i> ADD</a>
+                <a href="#" class="btn btn-success btn-sm" onclick='CreateFaculty()'>Add</a>
             }
             @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && (x.CREDENTIAL_EDIT == true || x.CREDENTIAL_DELETE == true) || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
             {
@@ -84,60 +87,66 @@
         </div>
     </div>
     <div class="card-body p-2">
-        @using (Html.BeginForm("Delete", "Faculty", FormMethod.Post))
-        {
-            <table class="table table-striped table-bordered table-hover table-sm" id="tableFacultys" width="100%">
-                <thead>
-                    <tr>
-                        <th><input type='checkbox' id='check' value='' /></th>
-                        <th>STT</th>
-                        <th class="search_input">Faculty</th>
-                        <th style="width:100%" class="search_input">Description</th>
-                    </tr>
-                </thead>
-                <tbody>
+       
+            <div class="row d-flex align-items-stretch">
+                @foreach (var item in Model)
+                {
+                    <div class="col-12 col-sm-4 col-md-2 d-flex align-items-stretch" id="row_@item.FACULTY_Id">
+                        <div class="card bg-light" style="width:273px!important">
+                            <div class="card-header text-muted border-bottom-0 p-2">
+                                <h2 class="lead"><b> @item.FACULTY_Name (@item.FACULTY_Code) </b></h2>
 
-                    @foreach (var item in Model)
-                    {
-                        stt++;
-                        <tr id="row_@item.FACULTY_Id">
-                            <td><input type='checkbox' name='chkId[]' id='checkbox' value="@item.FACULTY_Id" /></td>
-                            <td>@stt</td>
-                            <td>@(item.FACULTY_Name != null ? item.FACULTY_Name : null)</td>
-                            <td style="width: 100%;text-align:left">@(item.FACULTY_Descriptions != null ? item.FACULTY_Descriptions : null)</td>
-                        </tr>
-                    }
-                </tbody>
+                            </div>
+                            <div class="card-body p-2">
+                                <p class="text-muted text-sm"><b>Coordinator:</b> @(item.ACCOUNTs.Where(x => x.ROLEGROUP.ROLEGROUP_Code == "MARKETINGCOORDINATOR" && x.FACULTY_Id == item.FACULTY_Id).Count() > 0? item.ACCOUNTs.FirstOrDefault(x => x.ROLEGROUP.ROLEGROUP_Code == "MARKETINGCOORDINATOR" && x.FACULTY_Id == item.FACULTY_Id).ACCOUNT_Name : "Unknown")</p>
+                                <p class="text-muted text-sm"><b>Status:</b> <span style="color:@(item.FACULTY_Status ? "#28a745" : "red")">@(item.FACULTY_Status ? "Active" : "Lock")</span></p>
+                                <ul class="ml-4 mb-0 fa-ul text-muted">
+                                    <li class=""><span class="fa-li"><i class="far fa-lg far fa-file-word"></i></span><b> Articles:  </b> @item.ARTICLEs.Where(x => x.ARTICLE_Status == true).Count()</li>
+                                    <li class=""><span class="fa-li"><i class="far fa-lg fa-file-image"></i></span><b> Images:  </b> @item.IMAGEs.Where(x => x.IMAGE_Status == true).Count()</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer">
+                                <div class="text-right float-right">
+                                    @if (Credentials.Where(x => x.ROLEGROUP_Code == "MARKETINGMANAGER").Count() > 0)
+                                    {
+                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                            Detail
+                                            <span class="sr-only">Action</span>
+                                        </button>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a href="/Management/Faculty/ArticlesApproved?fACULTY_Code=@item.FACULTY_Code" class="dropdown-item">Articles</a>
+                                            <a href="/Management/Faculty/ImagesApproved?fACULTY_Code=@item.FACULTY_Code" class="dropdown-item">Images</a>
+                                        </div>
+                                    }
+                                    @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_EDIT == true || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
+                                    {
+                                        <a href="#" class="btn btn-sm btn-warning" id="@item.FACULTY_Id" onclick='EditFaculty(this.id)'>Edit</a>
+                                    }
+                                    @if (item.FACULTY_Status == false)
+                                    {
+                                        <a href="#" class="btn btn-sm btn-success" id="@item.FACULTY_Id" onclick='ChangeStatus(this.id)'>Unlock</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-sm btn-danger" id="@item.FACULTY_Id" onclick='ChangeStatus(this.id)'>Lock</a>
+                                    }
 
-            </table>
-            if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && (x.CREDENTIAL_EDIT == true || x.CREDENTIAL_DELETE == true)).Count() > 0)
-            {
-                <div class="margin">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                            Action
-                            <span class="sr-only">Action</span>
-                        </button>
-                        <div class="dropdown-menu" role="menu">
-                            @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_EDIT == true).Count() > 0)
-                            {
-                                <a href="#" class="dropdown-item" onclick='EditFaculty()'>Edit</a>
-                            }
-                            @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_DELETE == true).Count() > 0)
-                            {
-                                <input type="submit" value="Delete" id="Delete" class="dropdown-item" />
-                            }
+
+
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-        }
+                }
+            </div>
+        
     </div>
 </div>
 @section filter{
 
 }
 @section js{
+    <script src="/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 
     <!-- InputMask -->
     <script src="/Content/plugins/inputmask/jquery.inputmask.min.js"></script>
@@ -153,33 +162,21 @@
             $('#MANAGEMENT').addClass("menu-open");
             $('#FACULTY').addClass("active");
 
-            $('#tableFacultys .search_input').each(function () {
-                var title = $(this).text();
-                $(this).html('<input type="text" style="width:100%" placeholder="' + title + '" />');
-            });
+            
 
-            $('#tableFacultys').removeAttr('width').css("text-align", "center").DataTable({
-                scrollY: @(Model.Count() > 15 ? "500" : "false"),
-                "scrollX": true,
-                "ordering": false,
-                "paging": false,
-                "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "Tất cả"]],
-                initComplete: function () {
-                    // Apply the search
-                    this.api().columns().every(function () {
-                        var that = this;
-
-                        $('input', this.header()).on('keyup change clear', function () {
-                            if (that.search() !== this.value) {
-                                that
-                                    .search(this.value)
-                                    .draw();
-                            }
-                        });
-                    });
-                },
-            });
+           
         });
+        function ChangeStatus(id) {
+            $.ajax({
+                url: "/Management/Faculty/ChangeStatus",
+                data: { id: id },
+                dataType: "json",
+                type: "POST",
+                success: function (response) {
+                    location.reload();
+                }
+            });
+        }
     </script>
 
 }

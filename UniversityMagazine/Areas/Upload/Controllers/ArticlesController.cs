@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -61,11 +62,11 @@ namespace UniversityMagazine.Areas.Upload.Controllers
         {
             if (new CommentArticleDAO().Edit(cOMMENTARTICLE))
             {
-                SetAlert("Comment successfully edited!", "success");
+                SetAlert("Comment đã chỉnh sửa thành công!", "success");
             }
             else
             {
-                SetAlert("Comment editing failed!", "warning");
+                SetAlert("Comment chỉnh sửa không thành công!", "warning");
             }
 
             return RedirectToAction("Article", new { id = new ArticleDAO().GetById(cOMMENTARTICLE.ARTICLE_Id).ARTICLE_FileName });
@@ -85,6 +86,43 @@ namespace UniversityMagazine.Areas.Upload.Controllers
         public PartialViewResult ViewArticle(string Id)
         {
             return PartialView();
+        }
+
+        [HttpPost]
+        public JsonResult ChangeStatus(Guid? id)
+        {
+            var result = new ArticleDAO().ChangeStatus(id);
+            var model = new ArticleDAO().GetById(id);
+            if (result == true)
+            {
+                var filename = Path.GetFileName(Server.MapPath(model.ARTICLE_FileUpload));
+                var sourceFile = Path.Combine(Server.MapPath(@"~/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/"),filename);
+                var temppath = Server.MapPath(@"~/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/Approved/");
+                if (!Directory.Exists(temppath))
+                {
+                    Directory.CreateDirectory(temppath);
+                }
+                model.ARTICLE_FileUpload = "/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/Approved/" + model.ARTICLE_FileName + "." + model.ARTICLE_Type;
+                new ArticleDAO().Edit(model, model.ACCOUNT_Id);
+                System.IO.File.Move(sourceFile, Path.Combine(temppath,filename));
+            }
+            else
+            {
+                var filename = Path.GetFileName(Server.MapPath(model.ARTICLE_FileUpload));
+                var sourceFile = Path.Combine(Server.MapPath(@"~/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/Approved/"), filename);
+                var temppath = Server.MapPath(@"~/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/");
+                if (!Directory.Exists(temppath))
+                {
+                    Directory.CreateDirectory(temppath);
+                }
+                model.ARTICLE_FileUpload = "/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/" + model.ARTICLE_FileName + "." + model.ARTICLE_Type;
+                new ArticleDAO().Edit(model, model.ACCOUNT_Id);
+                System.IO.File.Move(sourceFile, Path.Combine(temppath, filename));
+            }
+            return Json(new
+            {
+                VAT = result
+            });
         }
 
     }

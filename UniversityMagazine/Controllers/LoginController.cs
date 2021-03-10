@@ -67,6 +67,9 @@ namespace UniversityMagazine.Controllers
                 else if (result == -2)
                 {
                     SetAlert("Incorrect password!", "warning");
+                }else if(result == -3)
+                {
+                    SetAlert("Your faculty has been locked, please contact the marketing manager for more information.","warning");
                 }
                 else
                 {

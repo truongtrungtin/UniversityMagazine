@@ -18,15 +18,15 @@ namespace UniversityMagazine.Common
             {
                 return false;
             }
+            if (session.RoleGroup == "ADMIN")
+            {
+                return true;
+            }
 
             IEnumerable<Credentials> privilegeLevels = this.GetCredentialByLoggedInUser(); // Call another method to get rights of the user from DB
             foreach (var item in privilegeLevels)
             {
-                if (item.ROLEGROUP_Code == "ADMIN")
-                {
-                    return true;
-                }
-                else if (item.ROLE_Code == ROLE_Code)
+               if (item.ROLE_Code == ROLE_Code)
                 {
                     if (item.CREDENTIAL_VIEW == CREDENTIAL_VIEW && item.CREDENTIAL_VIEW == true)
                     {

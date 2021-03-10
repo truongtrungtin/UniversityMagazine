@@ -126,22 +126,37 @@ var CreateFaculty = function () {
     });
 };
 
-var EditFaculty = function () {
-    var checkboxes = document.querySelectorAll('input[name="chkId[]"]:checked').length;
-    if (checkboxes > 0) {
-        if (checkboxes == 1) {
-            var Id = $('input[name="chkId[]"]:checked').val()
-            var url = "/Management/Faculty/Edit?fACULTY_Id=" + Id;
-            $("#myModalBodyDivEdit").load(url, function () {
-                $("#MyModalEdit").modal();
-            });
-        } else {
-            alert("Chỉ chọn một giá trị!");
-            return false;
-        }
-    } else {
-        alert("Không có giá trị nào được chọn!!");
-        return false;
-    }
+function EditFaculty(Id) {
+    var url = "/Management/Faculty/Edit?fACULTY_Id=" + Id;
+    $("#myModalBodyDivEdit").load(url, function () {
+        $("#MyModalEdit").modal();
+    });
 };
 //#endregion Faculty
+
+if (document.getElementById("check") != null) {
+    document.getElementById("check").onclick = function () {
+        var checkboxes = document.getElementsByName('chkId[]');
+        if (document.getElementById("check").checked) {
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = true;
+            }
+        } else {
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = false;
+            }
+        }
+    };
+}
+
+function filterSelection(c) {
+    var x, i;
+    x = document.getElementsByClassName("filterDiv");
+    if (c == "all") c = "";
+    // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
+    for (i = 0; i < x.length; i++) {
+        w3RemoveClass(x[i], "show");
+        if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show");
+    }
+}
+
