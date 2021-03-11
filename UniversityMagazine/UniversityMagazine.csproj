@@ -192,23 +192,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\13469f63-0c97-4b93-9796-28cf962723ad\Files\A00123012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\17c49dcf-d504-4f48-85f0-44c23abc319a\Files\A00222012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\2a1c671c-4124-4d31-9fa3-72fb92eb65aa\Files\A00224012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\3a6dc730-9914-42d0-ab4c-bd250db9c835\Files\A00224012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\3b1f3d5b-21b2-462a-9398-a5a31474d8b6\Files\A00222012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\3ee0b796-bb79-4451-a2ee-20311e2d1068\Files\A00224012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\4718c52b-389b-4858-bba3-02f2230e7ed4\Files\A00224012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\66715848-4316-4b45-98c2-2ce146002d7a\Files\A00224012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\98fc5b01-79e4-45b8-9069-a205f6835c84\Files\A00222012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\a7a7f105-9c0d-4cc1-8694-1f07d713cf5d\Files\A00224012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\ad168ee1-ea5c-4b6e-88a9-54945e053e4b\Files\A00222012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\b8abba11-f4d6-4479-a3c7-411805d672c7\Files\A00224012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\c940c467-489a-411c-8cb6-9ed96185a136\Files\A00224012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\d67b4947-a16c-4cc1-b686-351e607cadc5\Files\A00222012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\ddd7d915-75be-4a27-90b2-3960376378e3\Files\A00222012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\ec3b0a8e-c567-48c8-bd6b-ae33c2e9a906\Files\A00222012021.png" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\f09091e7-bb84-4f10-a532-9645eaaa2cf6\Files\A00222012021.png" />
     <Content Include="Content\build\config\postcss.config.js" />
     <Content Include="Content\build\config\rollup.config.js" />
     <Content Include="Content\build\js\AdminLTE.js" />
@@ -2266,24 +2249,6 @@
     <Content Include="Areas\Management\Views\Faculty\Edit.cshtml" />
     <Content Include="Areas\Management\Views\Faculty\Index.cshtml" />
     <Content Include="Areas\Management\Views\web.config" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\0170f85b-0f33-425a-97da-9f6d15236e1b\Files\A00225012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\06261424-0f84-4f17-9e5a-4a990a20a0e9\Files\A00125012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\0b0e668b-55c7-4172-92d3-b4cf7b1f4bbb\Files\A00125012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\0f69b8c9-9aaf-46be-8f69-887ab45bdeaa\Files\A00125012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\192768ad-db6d-4f6a-b70b-0fa3ee0efb53\Files\A00124012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\332d06f6-2ae2-499b-a237-7c4e9e8d40c2\Files\A00225012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\58b4b4bb-cba0-43d7-9e94-9db0f98fb2d9\Files\A00125012021.docx" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\601185d0-4638-4be5-a1a0-3b15057c2838\Files\A00124012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\9e94225a-d828-45f0-83ce-2e8fa4ee5444\Files\A00125012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\a4137a6a-c954-491b-b40e-0922c8398c04\Files\A00425012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\a4137a6a-c954-491b-b40e-0922c8398c04\Files\A00425012021.docx" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\a94f1f20-7c4e-482d-ab41-9b248b303e53\Files\A00125012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\c2096700-a668-4b54-bf08-73c9ad4e501a\Files\A00125012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\c81a39d2-831a-45c2-9c13-7442a03dadb7\Files\A00325012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\e5bf40ad-7e38-4531-87a8-9ebf831f1b27\Files\A00125012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\f370d378-f39d-4a20-800e-b8668e05aac7\Files\A00125012021.docx" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\f88e791c-fb94-40dd-8eb1-aa90e9880a0e\Files\A00125012021.doc" />
-    <Content Include="Articles\1a0da5fc-e2d2-4200-9a72-0000d50b5b20\fef6f142-a40c-40ee-8ef3-ccea0292f0ea\Files\A00122012021.pdf" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_Navigation.cshtml" />
@@ -2325,6 +2290,13 @@
     <Content Include="Areas\Upload\Views\Images\ViewImage.cshtml" />
     <Content Include="Areas\Management\Views\Faculty\ArticlesApproved.cshtml" />
     <Content Include="Areas\Management\Views\Faculty\ImagesApproved.cshtml" />
+    <Content Include="Articles\2021\03\IT\NDH00103032021\03-2021_IT_NDH00103032021_articles.zip" />
+    <Content Include="Articles\2021\03\IT\NDH00103032021\Approved\NDH00310032021.docx" />
+    <Content Include="Articles\2021\03\IT\NDH00103032021\Approved\NDH00410032021.docx" />
+    <Content Include="Articles\2021\03\IT\TTT00203032021\03-2021_IT_TTT00203032021_articles.zip" />
+    <Content Include="Articles\2021\03\IT\TTT00203032021\Approved\TTT00110032021.docx" />
+    <Content Include="Articles\2021\03\IT\TTT00203032021\Approved\TTT00210032021.docx" />
+    <Content Include="Articles\2021\03\IT\TTT00203032021\Approved\TTT00310032021.docx" />
     <None Include="packages.config" />
     <Content Include="Views\MyUpload\Image.cshtml" />
   </ItemGroup>
