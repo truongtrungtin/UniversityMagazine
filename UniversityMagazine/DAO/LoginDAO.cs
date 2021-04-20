@@ -1,11 +1,12 @@
-﻿using System;
+﻿using EntityModels.EF;
+using EntityModels.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using UniversityMagazine.Common;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.DAO
 {
@@ -100,7 +101,7 @@ namespace UniversityMagazine.DAO
         public bool CheckPassword(string aCCOUNT_Username, string aCCOUNT_Password)
         {
 
-            if (db.ACCOUNTs.Where(x => x.ACCOUNT_Username == aCCOUNT_Username && x.ACCOUNT_Password == aCCOUNT_Password).Count() > 0)
+            if (db.ACCOUNTs.Where(x => x.ACCOUNT_Username.ToLower() == aCCOUNT_Username.ToLower() && x.ACCOUNT_Password == aCCOUNT_Password).Count() > 0)
             {
                 return true;
             }
@@ -110,7 +111,7 @@ namespace UniversityMagazine.DAO
 
         public int Login(string aCCOUNT_Username, string aCCOUNT_Password)
         {
-            var result = db.ACCOUNTs.SingleOrDefault(x => x.ACCOUNT_Username == aCCOUNT_Username);
+            var result = db.ACCOUNTs.SingleOrDefault(x => x.ACCOUNT_Username.ToLower() == aCCOUNT_Username.ToLower());
             if (result == null)
             {
                 return 0;
@@ -270,6 +271,26 @@ namespace UniversityMagazine.DAO
         public IEnumerable<ACCOUNT> GetAccountWithCreated(Guid CREATOR)
         {
             return db.ACCOUNTs.Where(x => x.ACCOUNT_CREATOR == CREATOR).OrderByDescending(x => x.ACCOUNT_CreateTime);
+        }
+
+        public bool CheckEmail(string email)
+        {
+            return db.ACCOUNTs.Count(x => x.ACCOUNT_Email == email) > 0;
+        }
+        public ACCOUNT GetByEmail(string email)
+        {
+            return db.ACCOUNTs.SingleOrDefault(x => x.ACCOUNT_Email == email);
+        }
+
+        public TokenModels GetToken(string email, string Token)
+        {
+            var Session_token = new TokenModels
+            {
+                email = GetByEmail(email).ACCOUNT_Email,
+                token = Token
+            };
+            return Session_token;
+
         }
     }
 }

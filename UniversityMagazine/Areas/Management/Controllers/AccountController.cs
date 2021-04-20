@@ -1,9 +1,9 @@
-﻿using System;
+﻿using EntityModels.EF;
+using System;
 using System.Configuration;
 using System.Web.Mvc;
 using UniversityMagazine.Areas.Management.DAO;
 using UniversityMagazine.Common;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Management.Controllers
 {
@@ -26,7 +26,6 @@ namespace UniversityMagazine.Areas.Management.Controllers
 
         [HttpPost]
         [HasCredential(ROLE_Code = "ACCOUNT", CREDENTIAL_ADD = true)]
-
         public ActionResult Create(ACCOUNT aCCOUNT)
         {
             var session = (UserLogin)Session[CommonConstants.USER_SESSION];
@@ -97,12 +96,12 @@ namespace UniversityMagazine.Areas.Management.Controllers
             var result = new AccountDAO().Delete(chkId);
             if (result)
             {
-                SetAlert("Xóa thành công", "success");
+                SetAlert("Deleted successfully", "success");
                 return RedirectToAction("Index", "Account");
             }
             else
             {
-                SetAlert("Xóa không thành công", "warning");
+                SetAlert("Deletion failed!", "warning");
                 return RedirectToAction("Index", "Account");
             }
         }

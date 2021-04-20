@@ -1,7 +1,7 @@
-﻿using System;
+﻿using EntityModels.EF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.DAO
 {
@@ -39,6 +39,23 @@ namespace UniversityMagazine.DAO
             }
 
         }
+
+        public Guid CreateNotificationComment(Guid? From, Guid? To, string Url, string Type)
+        {
+            var data = new NOTIFICATION();
+            data.NOTIFICATION_Id = Guid.NewGuid();
+            data.NOTIFICATION_From = From;
+            data.NOTIFICATION_To = To;
+            data.NOTIFICATION_Status = false;
+            data.NOTIFICATION_Time = DateTime.Now;
+            data.NOTIFICATION_Content = "commented on the " + Type.ToLower() + ".";
+            data.NOTIFICATION_Url = Url;
+            db.NOTIFICATIONs.Add(data);
+            db.SaveChanges();
+            return data.NOTIFICATION_Id;
+        }
+
+
 
 
         public bool Edit(COMMENTARTICLE cOMMENTARTICLE)

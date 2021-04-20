@@ -26,7 +26,7 @@ namespace UniversityMagazine.Common
             IEnumerable<Credentials> privilegeLevels = this.GetCredentialByLoggedInUser(); // Call another method to get rights of the user from DB
             foreach (var item in privilegeLevels)
             {
-               if (item.ROLE_Code == ROLE_Code)
+                if (item.ROLE_Code == ROLE_Code)
                 {
                     if (item.CREDENTIAL_VIEW == CREDENTIAL_VIEW && item.CREDENTIAL_VIEW == true)
                     {
@@ -64,7 +64,7 @@ namespace UniversityMagazine.Common
             {
                 filterContext.Result = new ViewResult
                 {
-                    ViewName = "~/Views/Error/Error404.cshtml"
+                    ViewName = "~/Views/Shared/Error.cshtml"
                 };
             }
             else

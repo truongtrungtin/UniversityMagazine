@@ -1,7 +1,7 @@
-﻿using System;
+﻿using EntityModels.EF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Upload.DAO
 {
@@ -30,6 +30,7 @@ namespace UniversityMagazine.Areas.Upload.DAO
                 cOMMENTARTICLE.COMMENT_Time = DateTime.Now;
                 var model = db.COMMENTARTICLEs.Add(cOMMENTARTICLE);
                 db.SaveChanges();
+
                 return true;
             }
             catch (Exception)
@@ -39,6 +40,7 @@ namespace UniversityMagazine.Areas.Upload.DAO
             }
 
         }
+
 
 
         public bool Edit(COMMENTARTICLE cOMMENTARTICLE)

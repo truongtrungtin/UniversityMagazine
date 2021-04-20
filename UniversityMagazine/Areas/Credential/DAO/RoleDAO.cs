@@ -1,7 +1,7 @@
-﻿using System;
+﻿using EntityModels.EF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Credential.DAO
 {
@@ -47,7 +47,7 @@ namespace UniversityMagazine.Areas.Credential.DAO
         {
             try
             {
-                foreach (var item in db.ROLEGROUPs.Where(x=>x.ROLEGROUP_Code != "ADMIN"))
+                foreach (var item in db.ROLEGROUPs.Where(x => x.ROLEGROUP_Code != "ADMIN"))
                 {
                     CREDENTIAL crd = new CREDENTIAL();
                     Guid id = Guid.NewGuid();

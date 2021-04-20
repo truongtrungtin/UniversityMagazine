@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using EntityModels.EF
+@using UniversityMagazine.Common
+@{
+    UniversityMagazineDBContext db = new UniversityMagazineDBContext();
+    var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+    var User = db.ACCOUNTs;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -19,6 +26,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="~/Content/dist/css/adminlte.min.css">
     <link href="~/Content/Site.css" rel="stylesheet" />
+
 </head>
 
 <body class="sidebar-mini">
@@ -57,14 +65,30 @@
                 <div class="container-fluid">
 
                     @RenderBody()
-                    <aside class="control-sidebar control-sidebar-light">
-                        <!-- Control sidebar content goes here -->
-                        <div class="p-2 control-sidebar-content">
-                            @RenderSection("filter", required: false)
-                        </div>
-                    </aside>
+                    @if (session != null)
+                    {
+                        if (session.RoleGroup != "ADMIN" && session.RoleGroup != "MARKETINGMANAGER")
+                        {
+                            <aside class="control-sidebar control-sidebar-light">
+                                <!-- Control sidebar content goes here -->
+                                <div class="p-2 control-sidebar-content">
+                                    @{Html.RenderAction("GroupChat", "Chat", new { area = "" });}
+                                </div>
+                            </aside>
+                        }
+                    }
                 </div>
             </section>
+            @if (session != null)
+            {
+                if (session.RoleGroup != "ADMIN" && session.RoleGroup != "MARKETINGMANAGER")
+                {
+                    <section>
+                        @{Html.RenderAction("Index", "Chat", new { area = "" }); }
+
+                    </section>
+                }
+            }
         </div>
     </div>
     <!-- ./wrapper -->
@@ -78,10 +102,161 @@
     </script>
     <!-- Bootstrap 4 -->
     <script src="~/Content/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @if (session != null)
+    {
+        if (session.RoleGroup != "ADMIN" && session.RoleGroup != "MARKETINGMANAGER")
+        {
+            <script type="text/javascript" src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
 
+        }
+    }
     @RenderSection("js", required: false)
     <!-- AdminLTE App -->
     <script src="~/Content/dist/js/adminlte.min.js"></script>
     <script src="~/Content/Site.js"></script>
+    @if (session != null)
+    {
+        if (session.RoleGroup != "ADMIN" && session.RoleGroup != "MARKETINGMANAGER")
+        {
+            <script src="~/signalr/hubs"></script>
+
+            <script>
+                
+                var notification = $.connection.chatHub;
+                $.connection.hub.start().done(function () {
+                    $('.SendComment').click(function () {
+                        notification.server.sendComment('@session.UserID', '' + $('#Comment_' + this.id).val() + '', '' + $('#Type_' + this.id).val() + '');
+                        notification.server.loadNotification(this.id);
+                    });
+                    $(document).ready(function () {
+                        $.ajax({
+                            url: "/Chat/GetNotification?id=" + '@session.UserID',
+                            dataType: "json",
+                            type: "GET",
+                            success: function (res) {
+                                for (var i = 0; i < res.data.length; i++) {
+                                    notification.server.loadDetailNotification(res.data[i]);
+                                }
+                            }
+                        });
+                    });
+                    notification.server.loadNotification('@session.UserID');
+                });
+                notification.client.broadcastNotification = function (Notification, To) {
+                    if (To == '@session.UserID') {
+                        if (Notification > 0) {
+                            $('#Notification .nav-link .badge').text(Notification);
+                            $('#Notification .dropdown-header').text(Notification + " Notifications");
+                            $('#Notification .dropdown-menu').removeClass("hide")
+                            $('#Notification .nav-link .badge').removeClass("hide")
+                        } else {
+                            $('#Notification .nav-link .badge').addClass("hide")
+                            $('#Notification .dropdown-menu').addClass("hide")
+                        }
+                    }
+                }
+                notification.client.broadcastNotificationDetail = function (To, From, Avatar, Content, Time, Url) {
+                    if (To == '@session.UserID') {
+                        $('#Notification .dropdown-menu').append('<div class="dropdown-divider"></div><a href="' + Url + '" class="dropdown-item"><div class="media"><img src="' + Avatar + '" alt="User Avatar" class="img-size-50 mr-3 img-circle"><div class="media-body"><h3 class="dropdown-item-title">' + From + '</h3> <p class="text-sm">' + From + ' ' + Content + '</p><p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>' + Time + '</p>');
+                    }
+                }
+                var chat = $.connection.chatHub;
+
+                //Hub
+                chat.client.broadcastMessage = function (From, To, message, type) {
+                    $.ajax({
+                        url: "/Chat/GetName?id=" + From,
+                        dataType: "json",
+                        type: "Post",
+                        success: function (res) {
+                            if ('@session.UserID' == To) {
+                                if (type == "Text") {
+                                    $('#message_' + To + From).removeClass('hide');
+                                    $('#message_' + To + From + ' .chat-messages').append('<div class="message-box-holder"><div class="message-sender">' + res.data + '</div><div class="message-box  message-partner">' + message + '</div></div>');
+                                } else if (type == "Image") {
+
+                                } else if (type == "File") {
+
+                                } else {
+
+                                }
+                            }
+                            if ('@session.UserID' == From) {
+                                if (type == "Text") {
+                                    $('#message_' + From + To + ' .chat-messages').append('<div class="message-box-holder"><div class="message-box">' + message + '</div></div>');
+                                } else if (type == "Image") {
+
+                                } else if (type == "File") {
+
+                                } else {
+
+                                }
+                            }
+                        }
+                    });
+                }
+                chat.client.broadcastNotificationMessage = function (Notification, To) {
+                    if (To == '@session.UserID') {
+                        if (Notification > 0) {
+                            $('#NotificationMessage').text(Notification);
+                            $('#NotificationMessage').removeClass("hide")
+                        } else {
+                            $('#NotificationMessage').addClass("hide")
+                        }
+                    }
+                }
+                chat.client.broadcastNotificationMessageWithUser = function (NotificationWithUser, From, To) {
+                    if (To == '@session.UserID') {
+                        if (NotificationWithUser > 0) {
+                            $('#NotificationUser_@session.UserID' + From).text(NotificationWithUser)
+                            $('#NotificationUser_@session.UserID' + From).removeClass("hide")
+
+                        } else {
+                            $('#NotificationUser_@session.UserID' + From).text('0')
+                            $('#NotificationUser_@session.UserID' + From).addClass("hide")
+                        }
+                    }
+                }
+                $(document).ready(function () {
+                    $.connection.hub.start().done(function () {
+                        $.ajax({
+                            url: "/Chat/GetNotificationMessageWithUser?id=" + '@session.UserID',
+                            dataType: "json",
+                            type: "Post",
+                            success: function (res) {
+                                for (var i = 0; i < res.data.length; i++) {
+                                    var a = res.data[i]
+                                    chat.server.loadNotificationMessageWithUser(a, '@session.UserID');
+                                }
+                            }
+                        });
+                    })
+
+                });
+
+                $.connection.hub.start().done(function () {
+                    chat.server.loadNotificationMessage('@session.UserID');
+                    $('.message-send').click(function () {
+                        chat.server.send('@session.UserID', '' + this.id + '', $('#text_' + this.id).val(), 'Text');
+                        $('#text_' + this.id).val('').focus();
+                        chat.server.loadNotificationMessage(this.id);
+                        chat.server.loadNotificationMessageWithUser('@session.UserID', this.id);
+
+                    })
+                    $('.chatbox').click(function () {
+                        var id = $('#' + this.id + ' .chat-input-holder .message-send').attr('id')
+                        chat.server.removeNotificationMessage('@session.UserID', id);
+                    })
+                })
+                function removehide(id) {
+                    var element = document.getElementById('message_' + id)
+                    element.classList.remove('hide')
+                    var ids = $('#message_' + id + ' .chat-input-holder .message-send').attr('id')
+                    chat.server.removeNotificationMessage('@session.UserID', ids);
+                }
+                
+            </script>
+        }
+    }
 </body>
 </html>

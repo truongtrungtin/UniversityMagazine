@@ -1,0 +1,65 @@
+﻿@model EntityModels.EF.TERMCONDITION
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css{
+    <!-- summernote -->
+    <link rel="stylesheet" href="~/Content/plugins/summernote/summernote-bs4.min.css">
+}
+@using (Html.BeginForm(FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="TERMCONDITION_Id" value="@Model.TERMCONDITION_Id" />
+    <section class="content">
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h3 class="card-title">
+                    Term & Condition
+                </h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body p-1">
+               @Html.TextAreaFor(x=>x.TERMCONDITION_Content, new { @id= "summernote" })
+            </div>
+            <div class="card-footer">
+                <div class="float-right">
+                    <button type="submit" class="btn btn-primary btn-sm" onclick="Save()">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.col-->
+
+
+    </section>
+}
+@section js{
+    <!-- Summernote -->
+    <script src="~/Content/plugins/summernote/summernote-bs4.min.js"></script>
+    <script>
+        $(function () {
+            // Summernote
+            $('#summernote').summernote()
+        });
+        $(document).ready(function () {
+            $('#MANAGEMENT').addClass("menu-open");
+            $('#TERMANDCONDITION').addClass("active");
+        });
+        //function Save() {
+        //    var content = $("#summernote").summernote("code")
+        //    alert(content)
+        //    $.ajax({
+        //        url: "/Management/TermAndCondition/Index/" + content,
+        //        data: { id: content },
+        //        type: "POST",
+        //        cache: false,
+        //        contentType: false,
+        //        processData: false,
+        //        success: function (response) {
+        //            location.reload();
+        //        }
+        //    });
+        //}
+    </script>
+}

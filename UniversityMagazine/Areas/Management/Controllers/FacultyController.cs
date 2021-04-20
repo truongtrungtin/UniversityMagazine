@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EntityModels.EF;
+using System;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Web.Mvc;
 using UniversityMagazine.Areas.Management.DAO;
 using UniversityMagazine.Common;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Management.Controllers
 {
@@ -85,7 +83,7 @@ namespace UniversityMagazine.Areas.Management.Controllers
             {
                 return RedirectToAction("Error403", "Error", new { area = "" });
             }
-        } 
+        }
 
         [HttpGet]
         [HasCredential(ROLE_Code = "FACULTY", CREDENTIAL_ADD = true)]
@@ -100,11 +98,11 @@ namespace UniversityMagazine.Areas.Management.Controllers
         {
             if (new FacultyDAO().Create(fACULTY))
             {
-                SetAlert("Đã thêm thành công!", "success");
+                SetAlert("Added successfully!", "success");
             }
             else
             {
-                SetAlert("Thêm không thành công, vui lòng thử lại!", "warning");
+                SetAlert("Add failed, please try again!", "warning");
             }
             return RedirectToAction("Index", "Faculty");
         }
@@ -123,11 +121,11 @@ namespace UniversityMagazine.Areas.Management.Controllers
         {
             if (new FacultyDAO().Edit(fACULTY))
             {
-                SetAlert("Đã sửa thành công!", "success");
+                SetAlert("Successfully edited!", "success");
             }
             else
             {
-                SetAlert("Chỉnh sửa không thành công, vui lòng thử lại!", "warning");
+                SetAlert("Editing failed, please try again!", "warning");
             }
             return RedirectToAction("Index", "Faculty");
         }
@@ -139,16 +137,16 @@ namespace UniversityMagazine.Areas.Management.Controllers
             var result = new FacultyDAO().Delete(Id);
             if (result)
             {
-                SetAlert("Xóa thành công", "success");
+                SetAlert("Deleted successfully", "success");
                 return RedirectToAction("Index", "Faculty");
             }
             else
             {
-                SetAlert("Xóa không thành công", "warning");
+                SetAlert("Deletion failed!", "warning");
                 return RedirectToAction("Index", "Faculty");
             }
         }
-        
+
         [HttpPost]
         [HasCredential(ROLE_Code = "FACULTY", CREDENTIAL_EDIT = true)]
         public JsonResult ChangeStatus(Guid? Id)

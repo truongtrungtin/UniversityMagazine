@@ -1,4 +1,4 @@
-﻿@model UniversityMagazine.EF.ARTICLE
+﻿@model EntityModels.EF.ARTICLE
 @using System.Globalization;
 @using UniversityMagazine.Common
 @{
@@ -107,28 +107,28 @@
                                     <div class="direct-chat-messages">
                                         @foreach (var item in Model.COMMENTARTICLEs)
                                         {
-                                        <div class="direct-chat-msg @(item.ACCOUNT_Id == session.UserID ? "right" : null)" id="row_@item.COMMENT_Id">
-                                            <div class="direct-chat-infos clearfix">
-                                                <span class="direct-chat-name @(item.ACCOUNT_Id == session.UserID ? "float-right" : "float-left")">@item.ACCOUNT.ACCOUNT_Name</span>
-                                                <span class="direct-chat-timestamp @(item.ACCOUNT_Id == session.UserID ? "float-left" : "float-right")">@item.COMMENT_Time</span>
-                                            </div>
-                                            <!-- /.direct-chat-infos -->
-                                            <img class="direct-chat-img" title="@item.ACCOUNT.ACCOUNT_Name" src="@(item.ACCOUNT.ACCOUNT_Avatar != null ? item.ACCOUNT.ACCOUNT_Avatar :"/Content/dist/img/Avatar.png")">
-                                            <!-- /.direct-chat-img -->
-                                            <div class="direct-chat-text">
-                                                @item.COMMENT_Content
+                                            <div class="direct-chat-msg @(item.ACCOUNT_Id == session.UserID ? "right" : null)" id="row_@item.COMMENT_Id">
+                                                <div class="direct-chat-infos clearfix">
+                                                    <span class="direct-chat-name @(item.ACCOUNT_Id == session.UserID ? "float-right" : "float-left")">@item.ACCOUNT.ACCOUNT_Name</span>
+                                                    <span class="direct-chat-timestamp @(item.ACCOUNT_Id == session.UserID ? "float-left" : "float-right")">@item.COMMENT_Time</span>
+                                                </div>
+                                                <!-- /.direct-chat-infos -->
+                                                <img class="direct-chat-img" title="@item.ACCOUNT.ACCOUNT_Name" src="@(item.ACCOUNT.ACCOUNT_Avatar != null ? item.ACCOUNT.ACCOUNT_Avatar :"/Content/dist/img/Avatar.png")">
+                                                <!-- /.direct-chat-img -->
+                                                <div class="direct-chat-text">
+                                                    @item.COMMENT_Content
 
-                                            </div>
-                                            @if (item.ACCOUNT_Id == session.UserID)
-                                            {
-                                                if ((DateTime.Now - item.COMMENT_Time).Value.TotalMinutes < 10)
+                                                </div>
+                                                @if (item.ACCOUNT_Id == session.UserID)
                                                 {
-                                                    <span class="direct-chat-timestamp float-left"><a href="#" title="Edit" id="@item.COMMENT_Id" onclick='EditCommentArticle(this.id)' style="color:#697582">Edit&ensp;</a></span>
-                                                    <span class="direct-chat-timestamp float-left"><a href="#" title="Delete" id="@item.COMMENT_Id" onclick='DeleteCommentArticle(this.id)' style="color:#697582">Delete</a></span>
+                                                    if ((DateTime.Now - item.COMMENT_Time).Value.TotalMinutes < 10)
+                                                    {
+                                                        <span class="direct-chat-timestamp float-left"><a href="#" title="Edit" id="@item.COMMENT_Id" onclick='EditCommentArticle(this.id)' style="color:#697582">Edit&ensp;</a></span>
+                                                        <span class="direct-chat-timestamp float-left"><a href="#" title="Delete" id="@item.COMMENT_Id" onclick='DeleteCommentArticle(this.id)' style="color:#697582">Delete</a></span>
+                                                    }
                                                 }
-                                            }
-                                            <!-- /.direct-chat-text -->
-                                        </div>
+                                                <!-- /.direct-chat-text -->
+                                            </div>
 
                                         }
                                     </div>
@@ -138,11 +138,13 @@
 
                         @using (Html.BeginForm("AddCommentArticle", "MyUpload", FormMethod.Post))
                         {
-                            @Html.HiddenFor(x => x.ARTICLE_Id);
                             <div class="input-group">
-                                <input type="text" name="COMMENT_Content" placeholder="Type comment ..." class="form-control">
+                                <input type="text" name="COMMENT_Content" placeholder="Type comment ..." autofocus class="form-control">
+                                <input type="hidden" name="ARTICLE_Id" id="Comment_@Model.ACCOUNT_Id" value="@Model.ARTICLE_Id">
+                                <input type="hidden" id="Type_@Model.ACCOUNT_Id" value="Article">
+
                                 <span class="input-group-append">
-                                    <button type="submit" class="btn btn-primary">Send</button>
+                                    <button type="submit" class="btn btn-primary SendComment" id="@Model.ACCOUNT_Id">Send</button>
                                 </span>
                             </div>
                         }
@@ -196,6 +198,7 @@
             }
 
         };
+
 
         function DeleteArticle(Id) {
             if (!confirm("Are you sure you want to delete?")) {

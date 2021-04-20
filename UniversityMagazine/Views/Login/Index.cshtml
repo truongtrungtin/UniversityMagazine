@@ -1,4 +1,4 @@
-﻿@model  UniversityMagazine.Models.LoginModel
+﻿@model  EntityModels.Models.LoginModel
 @{
     Layout = null;
 }
@@ -52,7 +52,7 @@
                 @using (Html.BeginForm("Index", "Login", new { @area = "" }, FormMethod.Post))
                 {
                     <div class="input-group mb-3">
-                        @Html.TextBoxFor(model => model.UserName, new { @required = true, @class = "form-control", @autofocus = "autofocus", @placeholder = "Username or Email ..." })
+                        @Html.TextBoxFor(model => model.UserName, new { @required = true, @class = "form-control", @autofocus = "autofocus", @placeholder = "Username" })
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        @Html.PasswordFor(model => model.Password, new { @required = true, @class = "form-control", @placeholder = "Password ..." })
+                        @Html.PasswordFor(model => model.Password, new { @required = true, @class = "form-control", @placeholder = "Password" })
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
@@ -79,9 +79,9 @@
                         </a>
                     </div>*@
                 <!-- /.social-auth-links -->
-                <p class="mb-1">
-                    <a href="#">I forgot my password</a>
-                </p>
+            <p class="mb-1">
+                @Html.ActionLink("I forgot my password", "ForgotPassword", "Login", new { area = "" })
+            </p>
             </div>
             <!-- /.login-card-body -->
         </div>

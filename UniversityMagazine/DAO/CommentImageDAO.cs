@@ -1,7 +1,7 @@
-﻿using System;
+﻿using EntityModels.EF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.DAO
 {

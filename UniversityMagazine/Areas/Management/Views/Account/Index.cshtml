@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UniversityMagazine.EF.ACCOUNT>
+﻿@model IEnumerable<EntityModels.EF.ACCOUNT>
 @using UniversityMagazine.Common
 @{
     ViewBag.Title = "Accounts";
@@ -27,6 +27,7 @@
             display: none;
         }
     </style>
+
 }
 @using (Html.BeginForm("Create", "Account", FormMethod.Post))
 {
@@ -182,10 +183,8 @@
             });
 
             $('#tableAccount').css("text-align", "center").DataTable({
-                scrollY: @(Model.Count() > 15 ? "500" : "false"),
-                "scrollX": true,
                 "ordering": false,
-                "paging": false,
+                "paging": true,
                 "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "Tất cả"]],
                 initComplete: function () {
                     // Apply the search

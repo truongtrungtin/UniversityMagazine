@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EntityModels.EF;
+using System;
 using System.Web.Mvc;
 using UniversityMagazine.Areas.Credential.DAO;
 using UniversityMagazine.Common;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Credential.Controllers
 {
@@ -29,11 +29,11 @@ namespace UniversityMagazine.Areas.Credential.Controllers
         {
             if (new RoleDAO().Create(rOLE))
             {
-                SetAlert("Đã thêm thành công!", "success");
+                SetAlert("Added successfully!", "success");
             }
             else
             {
-                SetAlert("Thêm không thành công, vui lòng thử lại!", "warning");
+                SetAlert("Add failed, please try again!", "warning");
             }
             return RedirectToAction("Index", "Role");
         }
@@ -52,11 +52,11 @@ namespace UniversityMagazine.Areas.Credential.Controllers
         {
             if (new RoleDAO().Edit(rOLE))
             {
-                SetAlert("Đã sửa thành công!", "success");
+                SetAlert("Successfully edited!", "success");
             }
             else
             {
-                SetAlert("Chỉnh sửa không thành công, vui lòng thử lại!", "warning");
+                SetAlert("Editing failed, please try again!", "warning");
             }
             return RedirectToAction("Index", "Role");
         }
@@ -68,12 +68,12 @@ namespace UniversityMagazine.Areas.Credential.Controllers
             var result = new RoleDAO().Delete(chkId);
             if (result)
             {
-                SetAlert("Xóa thành công", "success");
+                SetAlert("Deleted successfully", "success");
                 return RedirectToAction("Index", "Role");
             }
             else
             {
-                SetAlert("Xóa không thành công", "warning");
+                SetAlert("Deletion failed!", "warning");
                 return RedirectToAction("Index", "Role");
             }
         }

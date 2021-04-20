@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EntityModels.EF;
+using System;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using UniversityMagazine.Areas.Upload.DAO;
 using UniversityMagazine.Common;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Upload.Controllers
 {
@@ -37,11 +34,11 @@ namespace UniversityMagazine.Areas.Upload.Controllers
             cOMMENTIMAGE.ACCOUNT_Id = session.UserID;
             if (new CommentImageDAO().Create(cOMMENTIMAGE))
             {
-                SetAlert("Comment thành công!", "success");
+                SetAlert("Comment successfully!", "success");
             }
             else
             {
-                SetAlert("Comment không thành công!", "warning");
+                SetAlert("Comment failed!", "warning");
             }
 
             return RedirectToAction("Image", new { id = new ImageDAO().GetById(cOMMENTIMAGE.IMAGE_Id).IMAGE_FileName });
@@ -60,11 +57,11 @@ namespace UniversityMagazine.Areas.Upload.Controllers
         {
             if (new CommentImageDAO().Edit(cOMMENTIMAGE))
             {
-                SetAlert("Comment đã chỉnh sửa thành công!", "success");
+                SetAlert("Comment successfully edited!", "success");
             }
             else
             {
-                SetAlert("Comment chỉnh sửa không thành công!", "warning");
+                SetAlert("Comment editing was not successful!", "warning");
             }
 
             return RedirectToAction("Image", new { id = new ImageDAO().GetById(cOMMENTIMAGE.IMAGE_Id).IMAGE_FileName });
@@ -75,7 +72,7 @@ namespace UniversityMagazine.Areas.Upload.Controllers
         [HasCredential(ROLE_Code = "COMMENTSIMAGE", CREDENTIAL_DELETE = true)]
         public JsonResult DeleteCommentImage(int cOMMENT_Id)
         {
-            SetAlert("Xóa comment thành công!", "success");
+            SetAlert("Delete Comment successfully!", "success");
             return Json(new { data = new CommentImageDAO().Delete(cOMMENT_Id) });
         }
 
@@ -103,6 +100,22 @@ namespace UniversityMagazine.Areas.Upload.Controllers
                 model.IMAGE_FileUpload = "/Images/" + model.IMAGE_UploadTime.Value.ToString("yyyy") + "/" + model.IMAGE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/Approved/" + model.IMAGE_FileName + "." + model.IMAGE_Type;
                 new ImageDAO().Edit(model);
                 System.IO.File.Move(sourceFile, Path.Combine(temppath, filename));
+                try
+                {
+                    string content = System.IO.File.ReadAllText(Server.MapPath("~/Views/templates/Approved.html"));
+
+                    content = content.Replace("{{student}}", model.ACCOUNT.ACCOUNT_Name);
+                    content = content.Replace("{{domain}}", Request.Url.Host);
+                    content = content.Replace("{{name}}", model.IMAGE_FileName);
+                    content = content.Replace("{{type}}", "image");
+                    content = content.Replace("{{Url}}", "MyUpload/Image/" + model.IMAGE_FileName + "/");
+                    new MailHelper().SendMail(model.ACCOUNT.ACCOUNT_Email, "University Magazine", content, "Approved");
+
+                }
+                catch (Exception)
+                {
+                    SetAlert("Email sending failed!", "warning");
+                }
             }
             else
             {
@@ -116,6 +129,22 @@ namespace UniversityMagazine.Areas.Upload.Controllers
                 model.IMAGE_FileUpload = "/Images/" + model.IMAGE_UploadTime.Value.ToString("yyyy") + "/" + model.IMAGE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/" + model.IMAGE_FileName + "." + model.IMAGE_Type;
                 new ImageDAO().Edit(model);
                 System.IO.File.Move(sourceFile, Path.Combine(temppath, filename));
+                try
+                {
+                    string content = System.IO.File.ReadAllText(Server.MapPath("~/Views/templates/Unapproved.html"));
+
+                    content = content.Replace("{{student}}", model.ACCOUNT.ACCOUNT_Name);
+                    content = content.Replace("{{domain}}", Request.Url.Host);
+                    content = content.Replace("{{name}}", model.IMAGE_FileName);
+                    content = content.Replace("{{type}}", "image");
+                    content = content.Replace("{{Url}}", "MyUpload/Image/" + model.IMAGE_FileName + "/");
+                    new MailHelper().SendMail(model.ACCOUNT.ACCOUNT_Email, "University Magazine", content, "Unapproved");
+
+                }
+                catch (Exception)
+                {
+                    SetAlert("Email sending failed!", "warning");
+                }
             }
             return Json(new
             {

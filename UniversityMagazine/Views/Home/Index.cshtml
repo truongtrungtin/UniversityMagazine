@@ -1,4 +1,4 @@
-﻿@using UniversityMagazine.EF
+﻿@using EntityModels.EF
 @using UniversityMagazine.Common
 @using UniversityMagazine.DAO
 @using System.Data.Entity;
@@ -8,38 +8,506 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     UniversityMagazineDBContext db = new UniversityMagazineDBContext();
     var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+
+
+
 }
 @section css{
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="~/Content/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <!-- Daterange picker -->
 }
-<!-- Content Wrapper. Contains page content -->
-<!-- /.row -->
-<!-- Main row -->
+@if (session.RoleGroup == "MARKETINGMANAGER")
+{
+    <div class="row">
+        <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3>@db.FACULTies.Count()</h3>
+                    <p>Faculties</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>@db.ACCOUNTs.Where(x => x.ROLEGROUP.ROLEGROUP_Code == "MARKETINGCOORDINATOR").Count()</h3>
 
-<div class="row">
-    <section class="col-lg-6 connectedSortable">
-    </section>
-    <section class="col-lg-6 connectedSortable">
-    </section>
-</div>
+                    <p>Account Marketing Coordinator</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>@db.ACCOUNTs.Where(x => x.ROLEGROUP.ROLEGROUP_Code == "STUDENT").Count()</h3>
 
-@section js{
-    <!-- Summernote -->
-    <script src="~/Content/plugins/summernote/summernote-bs4.min.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <script>
+                    <p>Account Students</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <div class="row">
+        <section class="col-lg-6 connectedSortable">
+            <div class="chart">
+                <h5 class="text-center text-bold text-uppercase">Chart of upload article</h5>
+                <canvas id="barChartArticle" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </section>
+        <section class="col-lg-6 connectedSortable">
+            <div class="chart">
+                <h5 class="text-center text-bold text-uppercase">Chart of upload image</h5>
+                <canvas id="barChartImage" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </section>
+    </div>
+}
+else if (session.RoleGroup == "MARKETINGCOORDINATOR")
+{
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3>@db.ARTICLEs.Where(x => x.FACULTY_Id == db.ACCOUNTs.FirstOrDefault(y => y.ACCOUNT_Id == session.UserID).FACULTY_Id).Count()</h3>
+                    <p>Articles</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>@db.ARTICLEs.Where(x => x.FACULTY_Id == db.ACCOUNTs.FirstOrDefault(y => y.ACCOUNT_Id == session.UserID).FACULTY_Id && x.ARTICLE_Status == true).Count()</h3>
 
-        // Make the dashboard widgets sortable Using jquery UI
-        $('.connectedSortable').sortable({
-            placeholder: 'sort-highlight',
-            connectWith: '.connectedSortable',
-            handle: '.card-header, .nav-tabs',
-            forcePlaceholderSize: true,
-            zIndex: 999999
-        })
-        $('.connectedSortable .card-header').css('cursor', 'move')
+                    <p>Articles Approved</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>@db.IMAGEs.Where(x => x.FACULTY_Id == db.ACCOUNTs.FirstOrDefault(y => y.ACCOUNT_Id == session.UserID).FACULTY_Id).Count()</h3>
 
-    </script>
+                    <p>Images</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>@db.IMAGEs.Where(x => x.FACULTY_Id == db.ACCOUNTs.FirstOrDefault(y => y.ACCOUNT_Id == session.UserID).FACULTY_Id && x.IMAGE_Status == true).Count()</h3>
+
+                    <p>Images Approved</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <div class="row">
+        <section class="col-lg-6 connectedSortable">
+            <div class="chart">
+                <h5 class="text-center text-bold text-uppercase">Chart of upload article</h5>
+                <canvas id="pieChartArticle" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </section>
+        <section class="col-lg-6 connectedSortable">
+            <div class="chart">
+                <h5 class="text-center text-bold text-uppercase">Chart of upload image</h5>
+                <canvas id="pieChartImage" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </section>
+    </div>
+}
+else if (session.RoleGroup == "STUDENT")
+{
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3>@db.ARTICLEs.Where(x => x.ACCOUNT_Id == session.UserID).Count()</h3>
+                    <p>Articles</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>@db.ARTICLEs.Where(x => x.ACCOUNT_Id == session.UserID && x.ARTICLE_Status == true).Count()</h3>
+
+                    <p>Articles Approved</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>@db.IMAGEs.Where(x => x.ACCOUNT_Id == session.UserID).Count()</h3>
+
+                    <p>Images</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>@db.IMAGEs.Where(x => x.ACCOUNT_Id == session.UserID && x.IMAGE_Status == true).Count()</h3>
+
+                    <p>Images Approved</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <div class="row">
+        <section class="col-lg-6 connectedSortable">
+            <div class="chart">
+                <h5 class="text-center text-bold text-uppercase">Chart of upload article</h5>
+                <canvas id="pieChartArticle" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </section>
+        <section class="col-lg-6 connectedSortable">
+            <div class="chart">
+                <h5 class="text-center text-bold text-uppercase">Chart of upload image</h5>
+                <canvas id="pieChartImage" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </section>
+    </div>
+}
+
+@if (session.RoleGroup == "MARKETINGMANAGER")
+{
+    @section js{
+        <!-- Summernote -->
+        <script src="~/Content/plugins/summernote/summernote-bs4.min.js"></script>
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+        <!-- ChartJS -->
+        <script src="~/Content/plugins/chart.js/Chart.min.js"></script>
+
+        <script>
+
+            $(document).ready(function () {
+                $.ajax({
+                    url: '/Home/GetDataChart',
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (response) {
+                        //Data Set for Bar Chart
+                        var areaChartDataArticle = {
+                            labels: response.faculty,
+                            datasets: [
+                                {
+                                    label: 'Article',
+                                    backgroundColor: 'rgba(60,141,188,0.9)',
+                                    borderColor: 'rgba(60,141,188,0.8)',
+                                    pointRadius: false,
+                                    pointColor: '#3b8bba',
+                                    pointStrokeColor: 'rgba(60,141,188,1)',
+                                    pointHighlightFill: '#fff',
+                                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                                    data: response.article
+                                },
+                                {
+                                    label: 'Article Approved',
+                                    backgroundColor: 'rgba(210, 214, 222, 1)',
+                                    borderColor: 'rgba(210, 214, 222, 1)',
+                                    pointRadius: false,
+                                    pointColor: 'rgba(210, 214, 222, 1)',
+                                    pointStrokeColor: '#c1c7d1',
+                                    pointHighlightFill: '#fff',
+                                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                                    data: response.articleApprove
+                                }
+                            ]
+                        }
+                        var areaChartDataImage = {
+                            labels: response.faculty,
+                            datasets: [
+                                {
+                                    label: 'Image',
+                                    backgroundColor: 'rgba(60,141,188,0.9)',
+                                    borderColor: 'rgba(60,141,188,0.8)',
+                                    pointRadius: false,
+                                    pointColor: '#3b8bba',
+                                    pointStrokeColor: 'rgba(60,141,188,1)',
+                                    pointHighlightFill: '#fff',
+                                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                                    data: response.image
+                                },
+                                {
+                                    label: 'Image Approved',
+                                    backgroundColor: 'rgba(210, 214, 222, 1)',
+                                    borderColor: 'rgba(210, 214, 222, 1)',
+                                    pointRadius: false,
+                                    pointColor: 'rgba(210, 214, 222, 1)',
+                                    pointStrokeColor: '#c1c7d1',
+                                    pointHighlightFill: '#fff',
+                                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                                    data: response.imageApprove
+                                },
+                            ]
+                        }
+
+
+
+                        var barChartCanvasArticle = $('#barChartArticle').get(0).getContext('2d')
+                        var barChartDataArticle = jQuery.extend(true, {}, areaChartDataArticle)
+                        var temp1 = areaChartDataArticle.datasets[0]
+                        barChartDataArticle.datasets[0] = temp1
+
+                        var barChartOptionsArticle = {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            datasetFill: false
+                        }
+
+                        var barChartArticle = new Chart(barChartCanvasArticle, {
+                            type: 'bar',
+                            data: barChartDataArticle,
+                            options: barChartOptionsArticle
+                        })
+
+                        var barChartCanvasImage = $('#barChartImage').get(0).getContext('2d')
+                        var barChartDataImage = jQuery.extend(true, {}, areaChartDataImage)
+                        var temp1 = areaChartDataImage.datasets[0]
+                        barChartDataImage.datasets[0] = temp1
+
+                        var barChartOptionsImage = {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            datasetFill: false
+                        }
+
+                        var barChartImage = new Chart(barChartCanvasImage, {
+                            type: 'bar',
+                            data: barChartDataImage,
+                            options: barChartOptionsImage
+                        })
+                    }
+                });
+            })
+
+            // Make the dashboard widgets sortable Using jquery UI
+            $('.connectedSortable').sortable({
+                placeholder: 'sort-highlight',
+                connectWith: '.connectedSortable',
+                handle: '.card-header, .nav-tabs',
+                forcePlaceholderSize: true,
+                zIndex: 999999
+            })
+            $('.connectedSortable .card-header').css('cursor', 'move')
+
+        </script>
+    }
+}
+else if (session.RoleGroup == "MARKETINGCOORDINATOR")
+{
+    @section js{
+        <!-- Summernote -->
+        <script src="~/Content/plugins/summernote/summernote-bs4.min.js"></script>
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+        <!-- ChartJS -->
+        <script src="~/Content/plugins/chart.js/Chart.min.js"></script>
+        <!-- FLOT CHARTS -->
+        <script src="~/Content/plugins/flot/jquery.flot.js"></script>
+        <script src="~/Content/plugins/flot/plugins/jquery.flot.resize.js"></script>
+        <script src="~/Content/plugins/flot/plugins/jquery.flot.pie.js"></script>
+        <script>
+
+            $(document).ready(function () {
+                $.ajax({
+                    url: '/Home/GetDataChart',
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (response) {
+                        var pieDataArticle = {
+                            labels: [
+                                'Article approve',
+                                'Article unapproved',
+                            ],
+                            datasets: [{ data: [response.ArticleApprove, response.ArticleUnapproved], backgroundColor: ['#f56954', '#00a65a', '#ffc107'], }]
+                        }
+                        var pieChartCanvasArticle = $('#pieChartArticle').get(0).getContext('2d')
+                        var pieOptionsArticle = {
+                            maintainAspectRatio: false,
+                            responsive: true,
+                        }
+                        //Create pie or douhnut chart
+                        // You can switch between pie and douhnut using the method below.
+                        var pieChartArticle = new Chart(pieChartCanvasArticle, {
+                            type: 'pie',
+                            data: pieDataArticle,
+                            options: pieOptionsArticle
+                        });
+
+                        var pieDataImage = {
+                            labels: [
+                                'Image approved',
+                                'Image unapproved',
+                            ],
+                            datasets: [{ data: [response.ImageApproved, response.ImageUnapproved], backgroundColor: ['#f56954', '#00a65a', '#ffc107'], }]
+                        }
+                        var pieChartCanvasImage = $('#pieChartImage').get(0).getContext('2d')
+                        var pieOptionsImage = {
+                            maintainAspectRatio: false,
+                            responsive: true,
+                        }
+                        //Create pie or douhnut chart
+                        // You can switch between pie and douhnut using the method below.
+                        var pieChartImage = new Chart(pieChartCanvasImage, {
+                            type: 'pie',
+                            data: pieDataImage,
+                            options: pieOptionsImage
+                        });
+
+                    }
+                });
+            })
+
+            // Make the dashboard widgets sortable Using jquery UI
+            $('.connectedSortable').sortable({
+                placeholder: 'sort-highlight',
+                connectWith: '.connectedSortable',
+                handle: '.card-header, .nav-tabs',
+                forcePlaceholderSize: true,
+                zIndex: 999999
+            })
+            $('.connectedSortable .card-header').css('cursor', 'move')
+
+        </script>
+    }
+}
+else if (session.RoleGroup == "STUDENT")
+{
+    @section js{
+        <!-- Summernote -->
+        <script src="~/Content/plugins/summernote/summernote-bs4.min.js"></script>
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+        <!-- ChartJS -->
+        <script src="~/Content/plugins/chart.js/Chart.min.js"></script>
+        <!-- FLOT CHARTS -->
+        <script src="~/Content/plugins/flot/jquery.flot.js"></script>
+        <script src="~/Content/plugins/flot/plugins/jquery.flot.resize.js"></script>
+        <script src="~/Content/plugins/flot/plugins/jquery.flot.pie.js"></script>
+        <script>
+
+            $(document).ready(function () {
+                $.ajax({
+                    url: '/Home/GetDataChart',
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (response) {
+                        var pieDataArticle = {
+                            labels: [
+                                'Article approve',
+                                'Article unapproved',
+                            ],
+                            datasets: [{ data: [response.ArticleApprove, response.ArticleUnapproved], backgroundColor: ['#f56954', '#00a65a', '#ffc107'], }]
+                        }
+                        var pieChartCanvasArticle = $('#pieChartArticle').get(0).getContext('2d')
+                        var pieOptionsArticle = {
+                            maintainAspectRatio: false,
+                            responsive: true,
+                        }
+                        //Create pie or douhnut chart
+                        // You can switch between pie and douhnut using the method below.
+                        var pieChartArticle = new Chart(pieChartCanvasArticle, {
+                            type: 'pie',
+                            data: pieDataArticle,
+                            options: pieOptionsArticle
+                        });
+
+                        var pieDataImage = {
+                            labels: [
+                                'Image approved',
+                                'Image unapproved',
+                            ],
+                            datasets: [{ data: [response.ImageApproved, response.ImageUnapproved], backgroundColor: ['#f56954', '#00a65a', '#ffc107'], }]
+                        }
+                        var pieChartCanvasImage = $('#pieChartImage').get(0).getContext('2d')
+                        var pieOptionsImage = {
+                            maintainAspectRatio: false,
+                            responsive: true,
+                        }
+                        //Create pie or douhnut chart
+                        // You can switch between pie and douhnut using the method below.
+                        var pieChartImage = new Chart(pieChartCanvasImage, {
+                            type: 'pie',
+                            data: pieDataImage,
+                            options: pieOptionsImage
+                        });
+
+                    }
+                });
+            })
+
+            // Make the dashboard widgets sortable Using jquery UI
+            $('.connectedSortable').sortable({
+                placeholder: 'sort-highlight',
+                connectWith: '.connectedSortable',
+                handle: '.card-header, .nav-tabs',
+                forcePlaceholderSize: true,
+                zIndex: 999999
+            })
+            $('.connectedSortable .card-header').css('cursor', 'move')
+
+        </script>
+    }
 }

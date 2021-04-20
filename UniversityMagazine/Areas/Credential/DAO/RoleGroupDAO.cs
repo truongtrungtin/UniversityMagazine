@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EntityModels.EF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Credential.DAO
 {

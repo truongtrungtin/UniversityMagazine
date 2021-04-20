@@ -54,9 +54,27 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.1.9, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.1.3.1\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -143,6 +161,7 @@
     <Compile Include="Areas\Credential\CredentialAreaRegistration.cs" />
     <Compile Include="Areas\Management\Controllers\AccountController.cs" />
     <Compile Include="Areas\Management\Controllers\BaseController.cs" />
+    <Compile Include="Areas\Management\Controllers\TermAndConditionController.cs" />
     <Compile Include="Areas\Management\ManagementAreaRegistration.cs" />
     <Compile Include="Areas\Upload\Controllers\ArticlesController.cs" />
     <Compile Include="Areas\Upload\Controllers\BaseController.cs" />
@@ -152,6 +171,8 @@
     <Compile Include="Areas\Upload\DAO\CommentImageDAO.cs" />
     <Compile Include="Areas\Upload\DAO\CommentArticleDAO.cs" />
     <Compile Include="Areas\Upload\UploadAreaRegistration.cs" />
+    <Compile Include="ChatHub\ChatHub.cs" />
+    <Compile Include="ChatHub\SignalRChat.cs" />
     <Compile Include="Common\CommonConstants.cs" />
     <Compile Include="Common\Credentials.cs" />
     <Compile Include="Common\HasCredentialAttribute.cs" />
@@ -159,12 +180,14 @@
     <Compile Include="Common\StringHelper.cs" />
     <Compile Include="Common\UserLogin.cs" />
     <Compile Include="Areas\Management\Controllers\FacultyController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\MyUploadController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="DAO\ChatDAO.cs" />
     <Compile Include="DAO\CommentImageDAO.cs" />
     <Compile Include="DAO\LoginDAO.cs" />
     <Compile Include="DAO\CommentArticleDAO.cs" />
@@ -172,23 +195,10 @@
     <Compile Include="DAO\ArticleDAO.cs" />
     <Compile Include="Areas\Management\DAO\AccountDAO.cs" />
     <Compile Include="Areas\Management\DAO\FacultyDAO.cs" />
-    <Compile Include="EF\ACCOUNT.cs" />
-    <Compile Include="EF\ARTICLE.cs" />
-    <Compile Include="EF\COMMENTARTICLE.cs" />
-    <Compile Include="EF\COMMENTIMAGE.cs" />
-    <Compile Include="EF\CREDENTIAL.cs" />
-    <Compile Include="EF\EDITINGHISTORY.cs" />
-    <Compile Include="EF\FACULTY.cs" />
-    <Compile Include="EF\IMAGE.cs" />
-    <Compile Include="EF\ROLE.cs" />
-    <Compile Include="EF\ROLEGROUP.cs" />
-    <Compile Include="EF\SLIDE.cs" />
-    <Compile Include="EF\TERMCONDITION.cs" />
-    <Compile Include="EF\UniversityMagazineDBContext.cs" />
+    <Compile Include="DAO\NotificationDAO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2217,6 +2227,14 @@
     <Content Include="Content\plugins\summernote\summernote.js.map" />
     <Content Include="Content\plugins\summernote\summernote.min.js.map" />
     <Content Include="Content\plugins\toastr\toastr.js.map" />
+    <Content Include="Images\2021\03\IT\NDH00103032021\NDH00124032021.jpg" />
+    <Content Include="Images\2021\03\IT\TTT00203032021\Approved\TTT00110032021.png" />
+    <Content Include="Images\2021\03\IT\TTT00203032021\Approved\TTT00210032021.png" />
+    <Content Include="Images\2021\03\IT\TTT00203032021\Approved\TTT00510032021.png" />
+    <Content Include="Images\2021\03\IT\TTT00203032021\TTT00510032021.png" />
+    <Content Include="Scripts\jquery-3.5.1.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="templates\ChangePassword.html" />
     <Content Include="templates\CreateAccount.html" />
@@ -2226,14 +2244,12 @@
     <Content Include="Views\Error\Error500.cshtml" />
     <Content Include="Views\Error\Error403.cshtml" />
     <Content Include="Views\MyUpload\Files.cshtml" />
-    <Content Include="Views\MyUpload\Upload.cshtml" />
     <Content Include="Views\MyUpload\UploadFile.cshtml" />
     <Content Include="Views\MyUpload\UploadImage.cshtml" />
     <Content Include="Views\MyUpload\Images.cshtml" />
     <Content Include="Views\MyUpload\File.cshtml" />
     <Content Include="Views\MyUpload\EditCommentArticle.cshtml" />
     <Content Include="Views\MyUpload\EditFileUpload.cshtml" />
-    <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="Areas\Credential\Views\RoleGroup\Create.cshtml" />
     <Content Include="Areas\Credential\Views\RoleGroup\Edit.cshtml" />
     <Content Include="Areas\Credential\Views\RoleGroup\Index.cshtml" />
@@ -2252,6 +2268,13 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_Navigation.cshtml" />
+    <Content Include="Views\templates\Unapproved.html" />
+    <Content Include="Views\templates\Approved.html" />
+    <Content Include="Views\templates\UploadImage.html" />
+    <Content Include="Views\templates\UploadFile.html" />
+    <Content Include="Views\templates\ChangePassword.html" />
+    <Content Include="Views\templates\CreateAccount.html" />
+    <Content Include="Views\templates\ForgotPassword.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -2271,6 +2294,13 @@
     <Folder Include="Areas\Management\Views\Shared\" />
     <Folder Include="Areas\Upload\Data\" />
     <Folder Include="Areas\Upload\Views\Shared\" />
+    <Folder Include="Articles\2021\04\IT\TTT00203032021\Approved\" />
+    <Folder Include="Scripts\aspnet\" />
+    <Folder Include="Scripts\cldr\" />
+    <Folder Include="Scripts\globalize\" />
+    <Folder Include="Scripts\localization\" />
+    <Folder Include="Scripts\vectormap-data\" />
+    <Folder Include="Scripts\vectormap-utils\" />
     <Folder Include="Views\Upload\" />
   </ItemGroup>
   <ItemGroup>
@@ -2283,7 +2313,6 @@
     <Content Include="Areas\Upload\Views\Articles\Article.cshtml" />
     <Content Include="Areas\Upload\Views\Articles\Index.cshtml" />
     <Content Include="Areas\Upload\Views\Images\Index.cshtml" />
-    <Content Include="Articles\90682a79-36c0-479c-b3ac-9ef77c860053\6c26e935-4b35-4b7e-aed6-89e7b634865e\Files\S1I00123022021.docx" />
     <Content Include="Areas\Upload\Views\Articles\ViewArticle.cshtml" />
     <Content Include="Areas\Upload\Views\Images\Image.cshtml" />
     <Content Include="Areas\Upload\Views\Images\EditCommentImage.cshtml" />
@@ -2297,8 +2326,24 @@
     <Content Include="Articles\2021\03\IT\TTT00203032021\Approved\TTT00110032021.docx" />
     <Content Include="Articles\2021\03\IT\TTT00203032021\Approved\TTT00210032021.docx" />
     <Content Include="Articles\2021\03\IT\TTT00203032021\Approved\TTT00310032021.docx" />
+    <Content Include="Areas\Management\Views\TermAndCondition\Index.cshtml" />
+    <Content Include="Articles\2021\04\IT\TTT00203032021\TTT00105042021.docx" />
+    <Content Include="Images\2021\03\IT\TTT00203032021\03-2021_IT_TTT00203032021_images.zip" />
     <None Include="packages.config" />
     <Content Include="Views\MyUpload\Image.cshtml" />
+    <Content Include="Views\Chat\Index.cshtml" />
+    <Content Include="Views\Chat\GroupChat.cshtml" />
+    <Content Include="Views\Login\ForgotPassword.cshtml" />
+    <Content Include="Views\Login\NewPassword.cshtml" />
+    <Content Include="Views\Login\RecoverPassword.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EntityModels\EntityModels.csproj">
+      <Project>{db4bf87a-3add-45bb-b8f6-79b063a4e0c1}</Project>
+      <Name>EntityModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

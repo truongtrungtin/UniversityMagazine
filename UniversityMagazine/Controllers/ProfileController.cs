@@ -1,35 +1,37 @@
-﻿using System.IO;
+﻿using EntityModels.EF;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using UniversityMagazine.Common;
 using UniversityMagazine.DAO;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Controllers
 {
     public class ProfileController : BaseController
     {
         // GET: Profile
-        public ActionResult Index(string Id)
+        public ActionResult Index()
         {
-            return View(new LoginDAO().GetByUsername(Id));
+            var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+            return View(new LoginDAO().GetById(session.UserID));
         }
 
         [HttpPost]
         public ActionResult Edit(ACCOUNT aCCOUNT)
+
         {
             if (ModelState.IsValid)
             {
                 if (new LoginDAO().Edit(aCCOUNT))
                 {
-                    SetAlert("Đã sửa thành công!", "success");
+                    SetAlert("Successfully edited!", "success");
                 }
             }
             else
             {
-                SetAlert("Chỉnh sửa không thành công, vui lòng thử lại!", "warning");
+                SetAlert("Editing failed, please try again!", "warning");
             }
-            return Redirect("/" + aCCOUNT.ACCOUNT_Username + "/");
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -55,16 +57,16 @@ namespace UniversityMagazine.Controllers
                     aCCOUNT.ACCOUNT_Avatar = Url;
                     if (new LoginDAO().Avatar(aCCOUNT))
                     {
-                        SetAlert("Đã thay đổi ảnh đại diện thành công!", "success");
+                        SetAlert("Profile has been changed successfully!", "success");
                     }
                 }
                 else
                 {
-                    SetAlert("Thay đổi ảnh đại diện không thành công, vui lòng thử lại!", "warning");
+                    SetAlert("Profile change failed, please try again!", "warning");
 
                 }
             }
-            return RedirectToAction("Index", ACCOUNT_Username + "/");
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -112,7 +114,7 @@ namespace UniversityMagazine.Controllers
                     SetAlert("Wrong password!", "warning");
                 }
             }
-            return RedirectToAction("Index", ACCOUNT_Username + "/");
+            return RedirectToAction("Index");
         }
     }
 }

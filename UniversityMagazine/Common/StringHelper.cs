@@ -75,6 +75,6 @@ namespace UniversityMagazine.Common
         }
         #endregion
 
-        
+
     }
 }

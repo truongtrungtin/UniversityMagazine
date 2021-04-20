@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using EntityModels.EF;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using UniversityMagazine.Areas.Management.DAO;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.DAO
 {

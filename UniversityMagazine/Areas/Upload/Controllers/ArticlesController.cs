@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EntityModels.EF;
+using System;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using UniversityMagazine.Areas.Upload.DAO;
 using UniversityMagazine.Common;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Upload.Controllers
 {
@@ -39,11 +36,11 @@ namespace UniversityMagazine.Areas.Upload.Controllers
             cOMMENTARTICLE.ACCOUNT_Id = session.UserID;
             if (new CommentArticleDAO().Create(cOMMENTARTICLE))
             {
-                SetAlert("Comment thành công!", "success");
+                SetAlert("Comment successfully!", "success");
             }
             else
             {
-                SetAlert("Comment không thành công!", "warning");
+                SetAlert("Comment failed!", "warning");
             }
 
             return RedirectToAction("Article", new { id = new ArticleDAO().GetById(cOMMENTARTICLE.ARTICLE_Id).ARTICLE_FileName });
@@ -62,11 +59,11 @@ namespace UniversityMagazine.Areas.Upload.Controllers
         {
             if (new CommentArticleDAO().Edit(cOMMENTARTICLE))
             {
-                SetAlert("Comment đã chỉnh sửa thành công!", "success");
+                SetAlert("Comment successfully edited!", "success");
             }
             else
             {
-                SetAlert("Comment chỉnh sửa không thành công!", "warning");
+                SetAlert("Comment editing was not successful!", "warning");
             }
 
             return RedirectToAction("Article", new { id = new ArticleDAO().GetById(cOMMENTARTICLE.ARTICLE_Id).ARTICLE_FileName });
@@ -77,7 +74,7 @@ namespace UniversityMagazine.Areas.Upload.Controllers
         [HasCredential(ROLE_Code = "COMMENTSARTICLE", CREDENTIAL_DELETE = true)]
         public JsonResult DeleteCommentArticle(int cOMMENT_Id)
         {
-            SetAlert("Xóa comment thành công!", "success");
+            SetAlert("Delete Comment successfully!", "success");
             return Json(new { data = new CommentArticleDAO().Delete(cOMMENT_Id) });
         }
 
@@ -96,7 +93,7 @@ namespace UniversityMagazine.Areas.Upload.Controllers
             if (result == true)
             {
                 var filename = Path.GetFileName(Server.MapPath(model.ARTICLE_FileUpload));
-                var sourceFile = Path.Combine(Server.MapPath(@"~/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/"),filename);
+                var sourceFile = Path.Combine(Server.MapPath(@"~/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/"), filename);
                 var temppath = Server.MapPath(@"~/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/Approved/");
                 if (!Directory.Exists(temppath))
                 {
@@ -104,7 +101,23 @@ namespace UniversityMagazine.Areas.Upload.Controllers
                 }
                 model.ARTICLE_FileUpload = "/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/Approved/" + model.ARTICLE_FileName + "." + model.ARTICLE_Type;
                 new ArticleDAO().Edit(model, model.ACCOUNT_Id);
-                System.IO.File.Move(sourceFile, Path.Combine(temppath,filename));
+                System.IO.File.Move(sourceFile, Path.Combine(temppath, filename));
+                try
+                {
+                    string content = System.IO.File.ReadAllText(Server.MapPath("~/Views/templates/Approved.html"));
+
+                    content = content.Replace("{{student}}", model.ACCOUNT.ACCOUNT_Name);
+                    content = content.Replace("{{domain}}", Request.Url.Host);
+                    content = content.Replace("{{name}}", model.ARTICLE_FileName);
+                    content = content.Replace("{{type}}", "article");
+                    content = content.Replace("{{Url}}", "MyUpload/File/" + model.ARTICLE_FileName + "/");
+                    new MailHelper().SendMail(model.ACCOUNT.ACCOUNT_Email, "University Magazine", content, "Approved");
+
+                }
+                catch (Exception)
+                {
+                    SetAlert("Email sending failed!", "warning");
+                }
             }
             else
             {
@@ -118,6 +131,22 @@ namespace UniversityMagazine.Areas.Upload.Controllers
                 model.ARTICLE_FileUpload = "/Articles/" + model.ARTICLE_UploadTime.Value.ToString("yyyy") + "/" + model.ARTICLE_UploadTime.Value.ToString("MM") + "/" + model.FACULTY.FACULTY_Code + "/" + model.ACCOUNT.ACCOUNT_Username + "/" + model.ARTICLE_FileName + "." + model.ARTICLE_Type;
                 new ArticleDAO().Edit(model, model.ACCOUNT_Id);
                 System.IO.File.Move(sourceFile, Path.Combine(temppath, filename));
+                try
+                {
+                    string content = System.IO.File.ReadAllText(Server.MapPath("~/Views/templates/Unapproved.html"));
+
+                    content = content.Replace("{{student}}", model.ACCOUNT.ACCOUNT_Name);
+                    content = content.Replace("{{domain}}", Request.Url.Host);
+                    content = content.Replace("{{name}}", model.ARTICLE_FileName);
+                    content = content.Replace("{{type}}", "article");
+                    content = content.Replace("{{Url}}", "MyUpload/File/" + model.ARTICLE_FileName + "/");
+                    new MailHelper().SendMail(model.ACCOUNT.ACCOUNT_Email, "University Magazine", content, "Unapproved");
+
+                }
+                catch (Exception)
+                {
+                    SetAlert("Email sending failed!", "warning");
+                }
             }
             return Json(new
             {

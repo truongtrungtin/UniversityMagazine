@@ -1,0 +1,83 @@
+﻿@model IEnumerable<EntityModels.EF.ACCOUNT>
+@using EntityModels.EF
+@using UniversityMagazine.Common
+
+@{
+    UniversityMagazineDBContext db = new UniversityMagazineDBContext();
+    var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+}
+<style>
+    .chat-users {
+        overflow-y: auto;
+        height: 400px;
+    }
+
+    .ibox-content {
+        background-color: #ffffff;
+        color: inherit;
+        padding: 15px 20px 20px 20px;
+        border-color: #e7eaec;
+        border-image: none;
+        border-style: solid solid none;
+        border-width: 1px 0;
+    }
+
+    .chat-user {
+        padding: 8px 10px;
+        border-bottom: 1px solid #e7eaec;
+    }
+
+    .chat-avatar {
+        white: 36px;
+        height: 36px;
+        float: left;
+        margin-right: 10px;
+    }
+
+    img {
+        vertical-align: middle;
+    }
+
+    img {
+        border: 0;
+    }
+
+    .chat-user-name {
+        padding: 10px;
+    }
+
+    .chat-user a {
+        color: inherit;
+    }
+
+    a {
+        color: #337ab7;
+        text-decoration: none;
+    }
+
+    a {
+        background-color: transparent;
+    }
+</style>
+
+<div class="chat-users">
+    <div class="users-list">
+        @foreach (var item in Model)
+        {
+            <div class="chat-user">
+                <img class="chat-avatar" src="@item.ACCOUNT_Avatar" alt="">
+
+
+                <div class="chat-user-name p-1">
+                    <a href="javascript:void(0);" class="showmessage" id="@session.UserID@item.ACCOUNT_Id" onclick="removehide(this.id)">
+                        @item.ACCOUNT_Name
+                        <span class="badge badge-danger hide" id="NotificationUser_@session.UserID@item.ACCOUNT_Id"> </span>
+
+                    </a>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

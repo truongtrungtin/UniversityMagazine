@@ -2,17 +2,17 @@
 
 namespace UniversityMagazine.Areas.Upload
 {
-    public class UploadAreaRegistration : AreaRegistration 
+    public class UploadAreaRegistration : AreaRegistration
     {
-        public override string AreaName 
+        public override string AreaName
         {
-            get 
+            get
             {
                 return "Upload";
             }
         }
 
-        public override void RegisterArea(AreaRegistrationContext context) 
+        public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapRoute(
                 "Upload_default",

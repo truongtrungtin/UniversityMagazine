@@ -1,7 +1,7 @@
-﻿using System;
+﻿using EntityModels.EF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Management.DAO
 {
@@ -67,7 +67,7 @@ namespace UniversityMagazine.Areas.Management.DAO
                 model = model.Where(x => x.ARTICLE_UploadTime.Value.Month.ToString() == month && x.ARTICLE_UploadTime.Value.Year.ToString() == year);
             }
             return model;
-        } 
+        }
         public IEnumerable<IMAGE> ImagesApproved(string fACULTY_Code)
         {
             IQueryable<IMAGE> model = db.IMAGEs.Where(x => x.FACULTY.FACULTY_Code == fACULTY_Code && x.IMAGE_Status == true);

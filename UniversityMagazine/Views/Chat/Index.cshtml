@@ -1,0 +1,155 @@
+﻿@model IEnumerable<EntityModels.EF.MESSAGE>
+@using UniversityMagazine.Common
+@using UniversityMagazine.DAO
+@using EntityModels.EF
+@{
+    var session = (UserLogin)Session[CommonConstants.USER_SESSION];
+    var db = new UniversityMagazineDBContext();
+    var user = new ChatDAO().GetAccounts(new ChatDAO().GetById(session.UserID).FACULTY_Id);
+}
+
+<div class="chatbox-holder">
+    @foreach (var item in user)
+    {
+        <div class="chatbox hide" id="message_@session.UserID@item.ACCOUNT_Id">
+            <div class="chatbox-top">
+                <div class="chatbox-avatar">
+                    <a target="_blank" href=""><img src="@item.ACCOUNT_Avatar" /></a>
+                </div>
+                <div class="chat-partner-name">
+                    @*<span class="status online"></span>*@
+                    <a target="_blank" href="">@item.ACCOUNT_Name</a>
+                </div>
+                <div class="chatbox-icons">
+                    <a href="javascript:void(0);"><i class="fa fa-minus"></i></a>
+                    <a href="javascript:void(0);"><i class="fa fa-plus hide"></i></a>
+                    <a href="javascript:void(0);"><i class="fas fa-times"></i></a>
+                </div>
+            </div>
+
+            <div class="chat-messages">
+                @{
+                    string day = null;
+                }
+                @foreach (var itemMess in Model.OrderBy(x => x.MESSAGE_SendTime))
+                {
+
+                    if ((itemMess.MESSAGE_From == session.UserID && itemMess.MESSAGE_To == item.ACCOUNT_Id) || (itemMess.MESSAGE_To == session.UserID && itemMess.MESSAGE_From == item.ACCOUNT_Id))
+                    {
+                        if (day != itemMess.MESSAGE_SendTime.Value.ToString("dd/MM/yyyy"))
+                        {
+                            day = itemMess.MESSAGE_SendTime.Value.ToString("dd/MM/yyyy");
+                            <div class="message-box-holder">
+                                <div class="message-sender-center">
+                                    @day
+                                </div>
+                            </div>
+                        }
+                        if (itemMess.MESSAGE_From == session.UserID)
+                        {
+                            if (itemMess.CONTENTMESSAGE != null)
+                            {
+                                <div class="message-box-holder">
+                                    <div class="message-box" title="@itemMess.MESSAGE_SendTime.Value.ToString("HH:MM")">
+                                        @if (itemMess.CONTENTMESSAGE.CONTENT_Type == "Text")
+                                        {
+                                            @itemMess.CONTENTMESSAGE.CONTENTMESSAGE_Content
+                                        }
+                                        else if (itemMess.CONTENTMESSAGE.CONTENT_Type == "Image")
+                                        {
+                                            <img />
+                                        }
+                                        else if (itemMess.CONTENTMESSAGE.CONTENT_Type == "File")
+                                        {
+                                            <img />
+                                        }
+
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            if (day != itemMess.MESSAGE_SendTime.Value.ToString("dd/MM/yyyy"))
+                            {
+                                day = itemMess.MESSAGE_SendTime.Value.ToString("dd/MM/yyyy");
+                                <div class="message-box-holder">
+                                    <div class="message-sender-center">
+                                        @day
+                                    </div>
+                                </div>
+                            }
+                            if (itemMess.CONTENTMESSAGE != null)
+                            {
+                                <div class="message-box-holder">
+                                    @*<div class="message-sender">
+                                @itemMess.ACCOUNT.ACCOUNT_Name
+                            </div>*@
+                                    <div class="message-box message-partner" title="@itemMess.MESSAGE_SendTime.Value.ToString("HH:MM")">
+                                        @if (itemMess.CONTENTMESSAGE.CONTENT_Type == "Text")
+                                        {
+                                            @itemMess.CONTENTMESSAGE.CONTENTMESSAGE_Content
+                                        }
+                                        else if (itemMess.CONTENTMESSAGE.CONTENT_Type == "Image")
+                                        {
+                                            <img />
+                                        }
+                                        else if (itemMess.CONTENTMESSAGE.CONTENT_Type == "File")
+                                        {
+                                            <img />
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    }
+
+                }
+
+            </div>
+            <div class="chat-input-holder">
+                <textarea class="chat-input" id="text_@item.ACCOUNT_Id"></textarea>
+                <input type="submit" value="Send" class="message-send" id="@item.ACCOUNT_Id" />
+            </div>
+            <div class="attachment-panel">
+                @*<a href="#" class="fa fa-thumbs-up"></a>
+                    <a href="#" class="fa fa-camera"></a>
+                    <a href="#" class="fa fa-video-camera"></a>*@
+                <a href="#" class="fa fa-image"></a>
+                <a href="#" class="fa fa-paperclip"></a>
+                @*  
+                <a href="#" class="fa fa-link"></a>
+                <a href="#" class="fa fa-trash-o"></a>
+                <a href="#" class="fa fa-search"></a>
+                    *@
+            </div>
+        </div>
+
+
+    }
+</div>
+<script src="~/Content/plugins/jquery/jquery.min.js"></script>
+<script>
+    $(function () {
+        $('.chatbox-icons .fa-minus').click(function () {
+            $(this).closest('.chatbox').toggleClass('chatbox-min');
+            $(this).closest('.fa-minus').toggleClass('hide');
+            $('.fa-plus').removeClass('hide');
+        });
+        $('.chatbox-icons .fa-plus').click(function () {
+            $(this).closest('.chatbox').toggleClass('chatbox-min');
+            $(this).closest('.fa-plus').toggleClass('hide');
+            $('.fa-minus').removeClass('hide');
+        });
+        $('.chatbox-icons .fa-times').click(function () {
+            $(this).closest('.chatbox').toggleClass('hide');
+        });
+
+
+    });
+    $('.chat-messages').animate({
+        scrollTop: $('.chat-messages').get(0).scrollHeight
+    }, 1000);
+</script>

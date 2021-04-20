@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UniversityMagazine.EF.ARTICLE>
+﻿@model IEnumerable<EntityModels.EF.ARTICLE>
 @using System.Globalization;
 @using UniversityMagazine.Common
 @{
@@ -41,7 +41,7 @@
                 }
 
                 <div class="mailbox-attachment-info">
-                    <a href="/MyUpload/File/@item.ARTICLE_FileName/" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> @item.ARTICLE_Tittle</a> <span style="color:@(item.ARTICLE_Status ? "#cfefcf" : "red")">(@(item.ARTICLE_Status ? "approved" : "Unapproved"))</span>
+                    <a href="/MyUpload/File/@item.ARTICLE_FileName/" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> @item.ARTICLE_Tittle</a> <span style="color:@(item.ARTICLE_Status ? "#28A745" : "red")">(@(item.ARTICLE_Status ? "approved" : "Unapproved"))</span>
                     <span class="mailbox-attachment-size clearfix mt-1">
                         <span>@(item.ARTICLE_Size != 0 ? String.Format(CultureInfo.InvariantCulture, "{0:0,0}", (item.ARTICLE_Size)) : null) KB</span>
                         @if ((DateTime.Now - item.ARTICLE_UploadTime).Value.TotalDays < 1)

@@ -1,4 +1,4 @@
-﻿@model UniversityMagazine.EF.IMAGE
+﻿@model EntityModels.EF.IMAGE
 @using System.Globalization;
 @using UniversityMagazine.Common
 @{
@@ -134,11 +134,13 @@
 
                         @using (Html.BeginForm("AddCommentImage", "MyUpload", FormMethod.Post))
                         {
-                            @Html.HiddenFor(x => x.IMAGE_Id);
                             <div class="input-group">
-                                <input type="text" name="COMMENT_Content" placeholder="Type comment ..." class="form-control">
+                                <input type="text" name="COMMENT_Content" placeholder="Type comment ..." autofocus class="form-control">
+                                <input type="hidden" name="IMAGE_Id" id="Comment_@Model.ACCOUNT_Id" value="@Model.IMAGE_Id">
+                                <input type="hidden" id="Type_@Model.ACCOUNT_Id" value="Image">
+
                                 <span class="input-group-append">
-                                    <button type="submit" class="btn btn-primary">Send</button>
+                                    <button type="submit" class="btn btn-primary SendComment" id="@Model.ACCOUNT_Id">Send</button>
                                 </span>
                             </div>
                         }

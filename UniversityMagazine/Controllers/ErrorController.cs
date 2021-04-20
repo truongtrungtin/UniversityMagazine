@@ -4,6 +4,10 @@ namespace UniversityMagazine.Controllers
 {
     public class ErrorController : Controller
     {
+        public ActionResult Index()
+        {
+            return View();
+        }
         // GET: Error
         public ActionResult Error404()
         {

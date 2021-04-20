@@ -1,5 +1,5 @@
-﻿@model  IEnumerable<UniversityMagazine.EF.FACULTY>
-@using UniversityMagazine.EF
+﻿@model  IEnumerable<EntityModels.EF.FACULTY>
+@using EntityModels.EF
 @using UniversityMagazine.Common
 @using UniversityMagazine.DAO
 @{
@@ -66,85 +66,64 @@
             {
                 <a href="#" class="btn btn-success btn-sm" onclick='CreateFaculty()'>Add</a>
             }
-            @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && (x.CREDENTIAL_EDIT == true || x.CREDENTIAL_DELETE == true) || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
-            {
-                <button type="button" class="btn btn-warning btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                    Action
-                    <span class="sr-only">Action</span>
-                </button>
-                <div class="dropdown-menu" role="menu">
-                    @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_EDIT == true || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
-                    {
-                        <a href="#" class="dropdown-item" onclick='EditFaculty()'>Edit</a>
-                    }
-                    @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_DELETE == true || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
-                    {
-                        <input type="submit" value="Delete" id="Delete" class="dropdown-item" />
-                    }
-                </div>
-            }
 
         </div>
     </div>
     <div class="card-body p-2">
-       
-            <div class="row d-flex align-items-stretch">
-                @foreach (var item in Model)
-                {
-                    <div class="col-12 col-sm-4 col-md-2 d-flex align-items-stretch" id="row_@item.FACULTY_Id">
-                        <div class="card bg-light" style="width:273px!important">
-                            <div class="card-header text-muted border-bottom-0 p-2">
-                                <h2 class="lead"><b> @item.FACULTY_Name (@item.FACULTY_Code) </b></h2>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-12 col-sm-4 col-md-3" id="row_@item.FACULTY_Id">
+                    <div class="card bg-light">
+                        <div class="card-header text-muted border-bottom-0 p-2">
+                            <h2 class="lead"><b> @item.FACULTY_Name (@item.FACULTY_Code) </b></h2>
 
-                            </div>
-                            <div class="card-body p-2">
-                                <p class="text-muted text-sm"><b>Coordinator:</b> @(item.ACCOUNTs.Where(x => x.ROLEGROUP.ROLEGROUP_Code == "MARKETINGCOORDINATOR" && x.FACULTY_Id == item.FACULTY_Id).Count() > 0? item.ACCOUNTs.FirstOrDefault(x => x.ROLEGROUP.ROLEGROUP_Code == "MARKETINGCOORDINATOR" && x.FACULTY_Id == item.FACULTY_Id).ACCOUNT_Name : "Unknown")</p>
-                                <p class="text-muted text-sm"><b>Status:</b> <span style="color:@(item.FACULTY_Status ? "#28a745" : "red")">@(item.FACULTY_Status ? "Active" : "Lock")</span></p>
-                                <ul class="ml-4 mb-0 fa-ul text-muted">
-                                    <li class=""><span class="fa-li"><i class="far fa-lg far fa-file-word"></i></span><b> Articles:  </b> @item.ARTICLEs.Where(x => x.ARTICLE_Status == true).Count()</li>
-                                    <li class=""><span class="fa-li"><i class="far fa-lg fa-file-image"></i></span><b> Images:  </b> @item.IMAGEs.Where(x => x.IMAGE_Status == true).Count()</li>
-                                </ul>
-                            </div>
-                            <div class="card-footer">
-                                <div class="text-right float-right">
-                                    @if (Credentials.Where(x => x.ROLEGROUP_Code == "MARKETINGMANAGER").Count() > 0)
-                                    {
-                                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                                            Detail
-                                            <span class="sr-only">Action</span>
-                                        </button>
-                                        <div class="dropdown-menu" role="menu">
-                                            <a href="/Management/Faculty/ArticlesApproved?fACULTY_Code=@item.FACULTY_Code" class="dropdown-item">Articles</a>
-                                            <a href="/Management/Faculty/ImagesApproved?fACULTY_Code=@item.FACULTY_Code" class="dropdown-item">Images</a>
-                                        </div>
-                                    }
-                                    @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_EDIT == true || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
-                                    {
-                                        <a href="#" class="btn btn-sm btn-warning" id="@item.FACULTY_Id" onclick='EditFaculty(this.id)'>Edit</a>
-                                    }
-                                    @if (item.FACULTY_Status == false)
-                                    {
-                                        <a href="#" class="btn btn-sm btn-success" id="@item.FACULTY_Id" onclick='ChangeStatus(this.id)'>Unlock</a>
-                                    }
-                                    else
-                                    {
-                                        <a href="#" class="btn btn-sm btn-danger" id="@item.FACULTY_Id" onclick='ChangeStatus(this.id)'>Lock</a>
-                                    }
-
+                        </div>
+                        <div class="card-body p-2">
+                            <p class="text-muted text-sm"><b>Coordinator:</b> @(item.ACCOUNTs.Where(x => x.ROLEGROUP.ROLEGROUP_Code == "MARKETINGCOORDINATOR" && x.FACULTY_Id == item.FACULTY_Id).Count() > 0? item.ACCOUNTs.FirstOrDefault(x => x.ROLEGROUP.ROLEGROUP_Code == "MARKETINGCOORDINATOR" && x.FACULTY_Id == item.FACULTY_Id).ACCOUNT_Name : "Unknown")</p>
+                            <p class="text-muted text-sm"><b>Status:</b> <span style="color:@(item.FACULTY_Status ? "#28a745" : "red")">@(item.FACULTY_Status ? "Active" : "Lock")</span></p>
+                            <ul class="ml-4 mb-0 fa-ul text-muted">
+                                <li class=""><span class="fa-li"><i class="far fa-lg far fa-file-word"></i></span><b> Articles:  </b> @item.ARTICLEs.Where(x => x.ARTICLE_Status == true).Count()</li>
+                                <li class=""><span class="fa-li"><i class="far fa-lg fa-file-image"></i></span><b> Images:  </b> @item.IMAGEs.Where(x => x.IMAGE_Status == true).Count()</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <div class="text-right float-right">
+                                @if (Credentials.Where(x => x.ROLEGROUP_Code == "MARKETINGMANAGER").Count() > 0)
+                                {
+                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                        Detail
+                                        <span class="sr-only">Action</span>
+                                    </button>
+                                    <div class="dropdown-menu" role="menu">
+                                        <a href="/Management/Faculty/ArticlesApproved?fACULTY_Code=@item.FACULTY_Code" class="dropdown-item">Articles</a>
+                                        <a href="/Management/Faculty/ImagesApproved?fACULTY_Code=@item.FACULTY_Code" class="dropdown-item">Images</a>
+                                    </div>
+                                }
+                                @if (Credentials.Where(x => x.ROLE_Code == "FACULTY" && x.CREDENTIAL_EDIT == true || x.ROLEGROUP_Code == "ADMIN").Count() > 0)
+                                {
+                                    <a href="#" class="btn btn-sm btn-warning" id="@item.FACULTY_Id" onclick='EditFaculty(this.id)'>Edit</a>
+                                }
+                                @if (item.FACULTY_Status == false)
+                                {
+                                    <a href="#" class="btn btn-sm btn-success" id="@item.FACULTY_Id" onclick='ChangeStatus(this.id)'>Unlock</a>
+                                }
+                                else
+                                {
+                                    <a href="#" class="btn btn-sm btn-danger" id="@item.FACULTY_Id" onclick='ChangeStatus(this.id)'>Lock</a>
+                                }
 
 
-                                </div>
+
                             </div>
                         </div>
                     </div>
-                }
-            </div>
-        
+                </div>
+            }
+        </div>
+       
     </div>
 </div>
-@section filter{
-
-}
 @section js{
     <script src="/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 

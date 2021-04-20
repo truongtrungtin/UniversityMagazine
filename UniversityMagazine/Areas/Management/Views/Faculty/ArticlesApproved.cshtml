@@ -1,16 +1,17 @@
-﻿@model IEnumerable<UniversityMagazine.EF.ARTICLE>
+﻿@model IEnumerable<EntityModels.EF.ARTICLE>
 @using System.Globalization;
 @using UniversityMagazine.Common
 
 @{
-    ViewBag.Title = "ArticlesApproved";
+    ViewBag.Title = "Articles Approved";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var session = (UserLogin)Session[CommonConstants.USER_SESSION];
     var Credentials = (IEnumerable<Credentials>)Session[CommonConstants.SESSION_CREDENTIALS];
 }
 
 @section breadcrumb{
-    <li class="breadcrumb-item"><a href="#">Download</a></li>
+    <li class="breadcrumb-item"><a href="~/Management/Faculty/">Faculty</a></li>
+    <li class="breadcrumb-item">Download</li>
     <li class="breadcrumb-item active">@ViewBag.Title</li>
 }
 @section css{

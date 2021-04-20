@@ -1,10 +1,10 @@
-﻿using System;
+﻿using EntityModels.EF;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Cryptography;
 using UniversityMagazine.Common;
-using UniversityMagazine.EF;
 
 namespace UniversityMagazine.Areas.Management.DAO
 {
@@ -19,7 +19,10 @@ namespace UniversityMagazine.Areas.Management.DAO
         {
             return db.ACCOUNTs.Find(aCCOUNT_Id);
         }
-
+        public ACCOUNT GetByEmail(string email)
+        {
+            return db.ACCOUNTs.SingleOrDefault(x => x.ACCOUNT_Email == email);
+        }
         public string GetMD5(string password)
         {
             string password_md5 = "";
@@ -206,11 +209,15 @@ namespace UniversityMagazine.Areas.Management.DAO
                 return false;
             }
         }
+        public ACCOUNT GetAccountCoordinator(Guid? Faculty)
+        {
+            return db.ACCOUNTs.FirstOrDefault(x => x.FACULTY_Id == Faculty && x.ROLEGROUP.ROLEGROUP_Code == "MARKETINGCOORDINATOR");
+        }
 
         public ACCOUNT GetAccountWithCreated(Guid? CREATOR, Guid? aCCOUNT_Id)
         {
             return db.ACCOUNTs.SingleOrDefault(x => x.ACCOUNT_CREATOR == CREATOR && x.ACCOUNT_Id == aCCOUNT_Id);
-        } 
+        }
         public IEnumerable<ACCOUNT> GetAccountsWithCreated(Guid? CREATOR)
         {
             return db.ACCOUNTs.Where(x => x.ACCOUNT_CREATOR == CREATOR).OrderByDescending(x => x.ACCOUNT_CreateTime);
