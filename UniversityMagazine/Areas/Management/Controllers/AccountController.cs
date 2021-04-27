@@ -43,7 +43,14 @@ namespace UniversityMagazine.Areas.Management.Controllers
                     content = content.Replace("{{Email}}", user.ACCOUNT_Email);
                     content = content.Replace("{{Address}}", user.ACCOUNT_Address);
                     content = content.Replace("{{Username}}", user.ACCOUNT_Username);
-                    content = content.Replace("{{Faculty}}", new FacultyDAO().GetById(user.FACULTY_Id).FACULTY_Descriptions);
+                    if (user.FACULTY_Id != null)
+                    {
+                        content = content.Replace("{{Faculty}}", new FacultyDAO().GetById(user.FACULTY_Id).FACULTY_Descriptions);
+                    }
+                    else
+                    {
+                        content = content.Replace("{{Faculty}}", "");
+                    }
                     content = content.Replace("{{Password}}", aCCOUNT.ACCOUNT_Password);
 
                     var toEmail = ConfigurationManager.AppSettings["ToEmailAddress"].ToString();

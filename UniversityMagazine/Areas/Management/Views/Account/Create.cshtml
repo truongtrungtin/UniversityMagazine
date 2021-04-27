@@ -59,14 +59,13 @@
             </div>
         </div>
     </div>
-    @if (session.RoleGroup == "ADMIN")
+    @if (session.RoleGroup == "MARKETINGMANAGER")
     {
         <div class="col-lg-12">
             <div class="form-group row">
                 <label class="col-form-label col-lg-2">FACULTY</label>
                 <div class="col-lg-10">
                     <div class="input-group">
-
                         <select name="FACULTY_Id" class="form-control form-control-sm select2" data-placeholder="Choose">
                             <option value=""></option>
                             @foreach (var item in db.FACULTies)
@@ -79,22 +78,6 @@
             </div>
         </div>
     }
-    else
-    {
-        if (session.RoleGroup == "ADMIN")
-        {
-            <input type="text" value="Marketing Manager" class="form-control form-control-sm" readonly />
-            <input type="text" name="ROLEGROUP_Id" value="@db.ROLEGROUPs.SingleOrDefault(x => x.ROLEGROUP_Code == "MARKETINGMANAGER").ROLEGROUP_Id" hidden />
-        }if (session.RoleGroup == "MARKETINGMANAGER")
-        {
-            <input type="text" value="Marketing Coordinator" class="form-control form-control-sm" readonly />
-            <input type="text" name="ROLEGROUP_Id" value="@db.ROLEGROUPs.SingleOrDefault(x => x.ROLEGROUP_Code == "MARKETINGCOORDINATOR").ROLEGROUP_Id" hidden />
-        }if (session.RoleGroup == "MARKETINGCOORDINATOR")
-        {
-            <input type="text" value="Student" class="form-control form-control-sm" readonly />
-            <input type="text" name="ROLEGROUP_Id" value="@db.ROLEGROUPs.SingleOrDefault(x => x.ROLEGROUP_Code == "STUDENT").ROLEGROUP_Id" hidden />
-        }
-    }
     <div class="col-lg-12">
         <div class="form-group row">
             <label class="col-form-label col-lg-2">Role Group</label>
@@ -103,15 +86,15 @@
                     @if (session.RoleGroup == "ADMIN")
                     {
                         <input type="text" value="Marketing Manager" class="form-control form-control-sm" readonly />
-                        <input type="text" name="ROLEGROUP_Id" value="@db.ROLEGROUPs.SingleOrDefault(x => x.ROLEGROUP_Code == "MARKETINGMANAGER").ROLEGROUP_Id" hidden />
+                        <input type="hidden" name="ROLEGROUP_Id" value="@db.ROLEGROUPs.SingleOrDefault(x => x.ROLEGROUP_Code == "MARKETINGMANAGER").ROLEGROUP_Id" />
                     }@if (session.RoleGroup == "MARKETINGMANAGER")
                     {
                         <input type="text" value="Marketing Coordinator" class="form-control form-control-sm" readonly />
-                        <input type="text" name="ROLEGROUP_Id" value="@db.ROLEGROUPs.SingleOrDefault(x => x.ROLEGROUP_Code == "MARKETINGCOORDINATOR").ROLEGROUP_Id" hidden />
+                        <input type="hidden" name="ROLEGROUP_Id" value="@db.ROLEGROUPs.SingleOrDefault(x => x.ROLEGROUP_Code == "MARKETINGCOORDINATOR").ROLEGROUP_Id" />
                     }@if (session.RoleGroup == "MARKETINGCOORDINATOR")
                     {
                         <input type="text" value="Student" class="form-control form-control-sm" readonly />
-                        <input type="text" name="ROLEGROUP_Id" value="@db.ROLEGROUPs.SingleOrDefault(x => x.ROLEGROUP_Code == "STUDENT").ROLEGROUP_Id" hidden />
+                        <input type="hidden" name="ROLEGROUP_Id" value="@db.ROLEGROUPs.SingleOrDefault(x => x.ROLEGROUP_Code == "STUDENT").ROLEGROUP_Id" />
                     }
                 </div>
             </div>
