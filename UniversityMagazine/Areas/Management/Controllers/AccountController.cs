@@ -36,14 +36,14 @@ namespace UniversityMagazine.Areas.Management.Controllers
                 var user = dao.Create(aCCOUNT);
                 if (user != null)
                 {
-                    string content = System.IO.File.ReadAllText(Server.MapPath("~/templates/CreateAccount.html"));
+                    string content = System.IO.File.ReadAllText(Server.MapPath("~/Views/templates/CreateAccount.html"));
 
                     content = content.Replace("{{FullName}}", user.ACCOUNT_Name);
                     content = content.Replace("{{Telephone}}", user.ACCOUNT_Telephone);
                     content = content.Replace("{{Email}}", user.ACCOUNT_Email);
                     content = content.Replace("{{Address}}", user.ACCOUNT_Address);
                     content = content.Replace("{{Username}}", user.ACCOUNT_Username);
-                    content = content.Replace("{{Faculty}}", user.FACULTY.FACULTY_Descriptions);
+                    content = content.Replace("{{Faculty}}", new FacultyDAO().GetById(user.FACULTY_Id).FACULTY_Descriptions);
                     content = content.Replace("{{Password}}", aCCOUNT.ACCOUNT_Password);
 
                     var toEmail = ConfigurationManager.AppSettings["ToEmailAddress"].ToString();

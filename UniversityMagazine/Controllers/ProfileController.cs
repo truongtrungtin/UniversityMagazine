@@ -87,7 +87,7 @@ namespace UniversityMagazine.Controllers
                             var result = dao.UpdatePassword(aCCOUNT);
                             if (result)
                             {
-                                string content = System.IO.File.ReadAllText(Server.MapPath("~/templates/ChangePassword.html"));
+                                string content = System.IO.File.ReadAllText(Server.MapPath("~/Views/templates/ChangePassword.html"));
                                 content = content.Replace("{{username}}", ACCOUNT_Username);
                                 new MailHelper().SendMail(dao.GetByUsername(ACCOUNT_Username).ACCOUNT_Email, "University Magazine", content, "Authenticate information");
                                 SetAlert("Password changed successfully!", "success");

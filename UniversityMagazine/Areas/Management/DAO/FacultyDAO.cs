@@ -13,7 +13,7 @@ namespace UniversityMagazine.Areas.Management.DAO
             db = new UniversityMagazineDBContext();
         }
 
-        public FACULTY GetById(Guid fACULTY_Id)
+        public FACULTY GetById(Guid? fACULTY_Id)
         {
             return db.FACULTies.Find(fACULTY_Id);
         }

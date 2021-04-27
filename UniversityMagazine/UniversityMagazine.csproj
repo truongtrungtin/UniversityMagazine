@@ -2236,9 +2236,6 @@
     <Content Include="Scripts\jquery.signalR-2.2.2.js" />
     <Content Include="Scripts\jquery.signalR-2.2.2.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="templates\ChangePassword.html" />
-    <Content Include="templates\CreateAccount.html" />
-    <Content Include="templates\ForgotPassword.html" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Error\Error404.cshtml" />
     <Content Include="Views\Error\Error500.cshtml" />
